@@ -27,12 +27,10 @@ function AddLinkDetailsScreen({ route }) {
     links.push(newLink);
     await AsyncStorage.setItem('links', JSON.stringify(links));
 
-    // 입력 필드 초기화
     setTitle('');
     setUrl('');
     setMemo('');
 
-    // LinkCardScreen으로 이동
     navigation.navigate('LinkCard', { id: newLink.id });
   };
 
@@ -61,7 +59,7 @@ function AddLinkDetailsScreen({ route }) {
               ref={urlRef}
               onSubmitEditing={() => memoRef.current?.focus()}
             />
-            <Icon name="link" size={24} color="#888" style={styles.icon} />
+            <Icon name="link" size={24} color="#fc7a1e" style={styles.icon} />
           </View>
           <View style={styles.memoContainer}>
             <TextInput
@@ -73,7 +71,7 @@ function AddLinkDetailsScreen({ route }) {
               onChangeText={setMemo}
               ref={memoRef}
             />
-            <Icon name="edit" size={24} color="#888" style={styles.memoIcon} />
+            <Icon name="edit" size={24} color="#fc7a1e" style={styles.memoIcon} />
           </View>
         </View>
       </KeyboardAvoidingView>

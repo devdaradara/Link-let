@@ -60,10 +60,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
+    color: 'black',
   },
   url: {
     fontSize: 16,
-    color: '#0000ff',
+    color: '#485696',
     marginBottom: 20,
   },
   actions: {

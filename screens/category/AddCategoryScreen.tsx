@@ -37,16 +37,16 @@ const AddCategoryScreen = ({ navigation }) => {
         <WalletPreview title={categoryName || '미리보기'} color={color} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>카테고리명</Text>
+        <Text style={styles.label}>CATEGORY</Text>
         <TextInput
           style={styles.input}
-          placeholder="카테고리명"
+          placeholder="category"
           value={categoryName}
           onChangeText={setCategoryName}
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>색상</Text>
+        <Text style={styles.label}>COLOR</Text>
         <TextInput
           style={styles.input}
           placeholder="#ffffff"
@@ -55,7 +55,7 @@ const AddCategoryScreen = ({ navigation }) => {
         />
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={saveCategory}>
-        <Text style={styles.saveButtonText}>저장</Text>
+        <Text style={styles.saveButtonText}>SAVE</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -64,7 +64,7 @@ const AddCategoryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e7e7e7',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     width: 100,
+    color: 'black',
   },
   input: {
     flex: 1,
@@ -93,12 +94,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   saveButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#fc7a1e',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    width: '80%',
+    width: '30%',
   },
   saveButtonText: {
     color: '#fff',

@@ -123,11 +123,11 @@ const CategoryNotesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#e7e7e7',
   },
   contentContainer: {
     paddingBottom: 20,
+    paddingHorizontal: 16,
   },
 });
 

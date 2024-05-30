@@ -14,7 +14,7 @@ const LinkCardHeader = ({ title, onSave, onEdit, onRemove, isEditing }) => {
           <TouchableOpacity onPress={onRemove}>
             <Icon name="delete" size={24} color="#000"/>
           <TouchableOpacity onPress={onSave}>
-            <Icon name="check" size={24} color="#000" style={styles.iconMargin}  />
+            <Icon name="check" size={24} color="#009688" style={styles.iconMargin}  />
           </TouchableOpacity>
           </TouchableOpacity>
         </View>
@@ -24,7 +24,7 @@ const LinkCardHeader = ({ title, onSave, onEdit, onRemove, isEditing }) => {
             <Icon name="edit" size={24} color="#000" />
           </TouchableOpacity>
           <TouchableOpacity onPress={onSave}>
-            <Icon name="check" size={24} color="#000"  style={styles.iconMargin} />
+            <Icon name="check" size={24} color="#009688"  style={styles.iconMargin} />
           </TouchableOpacity>
         </View>
       )}
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'black',
   },
   buttons: {
     flexDirection: 'row',

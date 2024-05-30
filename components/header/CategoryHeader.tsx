@@ -20,16 +20,16 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({ title, onBack, onEdit, 
       <Text style={styles.title}>{title}</Text>
       {isEditing ? (
         <View style={styles.buttons}>
-          <TouchableOpacity onPress={onSave}>
-            <Icon name="check" size={24} color="#000" />
+          <TouchableOpacity onPress={onDelete}>
+            <Icon name="delete" size={24} color="#fc7a1e" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onDelete} style={styles.iconMargin}>
-            <Icon name="delete" size={24} color="#000" />
+          <TouchableOpacity onPress={onSave} style={styles.iconMargin}>
+            <Icon name="check" size={24} color="#485696" />
           </TouchableOpacity>
         </View>
       ) : (
         <TouchableOpacity onPress={onEdit}>
-          <Icon name="edit" size={24} color="#000" />
+          <Icon name="edit" size={24} color="#fc7a1e" />
         </TouchableOpacity>
       )}
     </View>
@@ -42,14 +42,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    padding: 16,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'black',
   },
   buttons: {
     flexDirection: 'row',

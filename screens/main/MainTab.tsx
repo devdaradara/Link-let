@@ -12,6 +12,7 @@ function MainTab() {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarActiveTintColor: '#fc7a1e',
         tabBarShowLabel: false,
         tabBarStyle: {
           height: 60, 

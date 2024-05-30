@@ -3,6 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+    return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{title}</Text>
@@ -16,7 +27,7 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
         </TouchableOpacity>
       </View>
       <Text style={styles.label}>생성일</Text>
-      <Text style={styles.date}>{createdAt}</Text>
+      <Text style={styles.date}>{formatDate(createdAt)}</Text>
       <Text style={styles.label}>메모</Text>
       <Text style={styles.memo}>{memo}</Text>
       <View style={styles.flipButtonContainer}>
@@ -42,12 +53,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: 'black',
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 14,
     marginBottom: 6,
+    color: 'black'
   },
   urlContainer: {
     flexDirection: 'row',
@@ -56,16 +69,17 @@ const styles = StyleSheet.create({
   },
   url: {
     fontSize: 16,
-    color: '#0000ff',
+    color: '#485696',
     flex: 1,
   },
   date: {
     fontSize: 14,
-    color: '#888',
     marginBottom: 14,
+    color: 'black',
   },
   memo: {
     fontSize: 14,
+    color: 'black',
   },
   flipButtonContainer: {
     flex: 1,

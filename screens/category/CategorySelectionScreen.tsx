@@ -40,7 +40,7 @@ const CategorySelectionScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={formatData([{ name: '추가', color: '#cccccc' }, ...categories], 2)}
+        data={formatData([{ name: '추가', color: '#f9c784' }, ...categories], 2)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => {
           if (item.name.includes('blank')) {
@@ -71,6 +71,7 @@ const CategorySelectionScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#e7e7e7',
   },
   row: {
     justifyContent: 'space-around',

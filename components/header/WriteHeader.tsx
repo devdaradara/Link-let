@@ -17,7 +17,7 @@ function WriteHeader({ onSave, title, setTitle }) {
         <TransparentCircleButton
           onPress={onGoBack}
           name="arrow-back"
-          color="#424242"
+          color="black"
         />
       </View>
       <TextInput
@@ -29,7 +29,7 @@ function WriteHeader({ onSave, title, setTitle }) {
       <View style={styles.buttons}>
         <TransparentCircleButton
           name="check"
-          color="#009688"
+          color="#fc7a1e"
           onPress={onSave}
         />
       </View>
@@ -39,11 +39,12 @@ function WriteHeader({ onSave, title, setTitle }) {
 
 const styles = StyleSheet.create({
   block: {
-    height: 56,
+    height: 65,
     paddingHorizontal: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
   iconButtonWrapper: {
     width: 32,

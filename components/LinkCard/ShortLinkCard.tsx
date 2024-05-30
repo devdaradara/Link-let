@@ -13,7 +13,7 @@ const getThumbnailUrl = (url) => {
   return `https://s2.googleusercontent.com/s2/favicons?domain=${url}`;
 };
 
-const ShortLinkCard = ({ title, url, memo, createdAt, onCopy, onPress }) => {
+const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress }) => {
   const thumbnailUrl = getThumbnailUrl(url);
 
   const getRelativeTime = (date) => {
@@ -57,8 +57,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     padding: 10,
-    marginBottom: 10,
+    marginVertical: 12,
     borderRadius: 8,
+    height: 100,
     elevation: 3,
   },
   thumbnail: {
@@ -66,13 +67,16 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     marginRight: 10,
+    alignSelf: 'center',
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 5,
   },
   title: {
@@ -91,7 +95,7 @@ const styles = StyleSheet.create({
   url: {
     flex: 1,
     fontSize: 14,
-    color: 'blue',
+    color: '#485696',
   },
 });
 

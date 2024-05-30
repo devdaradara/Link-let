@@ -19,10 +19,10 @@ const HomeScreen = () => {
             title: category.name,
             color: category.color
           }));
-          setCategories([{ title: '전체 보기', color: '#cccccc' }, ...parsedCategories]);
+          setCategories([{ title: '전체 보기', color: '#f9c784' }, ...parsedCategories]);
         } else {
           console.log("No categories found in storage.");
-          setCategories([{ title: '전체 보기', color: '#cccccc' }]);
+          setCategories([{ title: '전체 보기', color: '#f9c784' }]);
         }
       } catch (error) {
         console.error("Error fetching categories: ", error);
@@ -74,6 +74,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#e7e7e7'
   },
   row: {
     justifyContent: 'space-around',

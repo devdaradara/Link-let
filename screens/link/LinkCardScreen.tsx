@@ -83,7 +83,7 @@ const LinkCardScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e7e7e7',
     justifyContent: 'center',
   },
   cardContainer: {
