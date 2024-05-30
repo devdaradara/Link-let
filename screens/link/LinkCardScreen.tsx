@@ -3,7 +3,8 @@ import { View, StyleSheet, Alert, ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinkCardFront from '../../components/LinkCard/LinkCardFront';
 import LinkCardBack from '../../components/LinkCard/LinkCardBack';
-import CategoryHeader from '../../components/header/CategoryHeader';
+import LinkCardUpdateBack from '../../components/LinkCard/LinkCardUpdateBack';
+import LinkCardHeader from '../../components/header/LinkCardHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 interface Link {
@@ -19,6 +20,7 @@ const LinkCardScreen = ({ route, navigation }) => {
   const { id } = route.params;
   const [link, setLink] = useState<Link | null>(null);
   const [flipped, setFlipped] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchLink = async () => {
@@ -45,6 +47,31 @@ const LinkCardScreen = ({ route, navigation }) => {
     setFlipped(!flipped);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setFlipped(true);
+  };
+
+  const handleSave = async (updatedTitle: string, updatedUrl: string, updatedMemo: string) => {
+    if (link) {
+      const updatedLink = { ...link, title: updatedTitle, url: updatedUrl, memo: updatedMemo };
+      const storedLinks = await AsyncStorage.getItem('links');
+      let links: Link[] = storedLinks ? JSON.parse(storedLinks) : [];
+      const linkIndex = links.findIndex(l => l.id === link.id);
+      if (linkIndex !== -1) {
+        links[linkIndex] = updatedLink;
+      }
+      await AsyncStorage.setItem('links', JSON.stringify(links));
+      setLink(updatedLink);
+      setIsEditing(false);
+      setFlipped(false);
+    }
+  };
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
   if (!link) {
     return (
       <View style={styles.container}>
@@ -55,18 +82,36 @@ const LinkCardScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <CategoryHeader title={link.category} onEdit={() => {}} />
+      <LinkCardHeader
+        title={link.category}
+        onBack={handleBack}
+        onEdit={handleEdit}
+        onSave={() => handleSave(link.title, link.url, link.memo)}
+        isEditing={isEditing}
+      />
       <ScrollView contentContainerStyle={styles.cardContainer}>
         {flipped ? (
-          <LinkCardBack
-            key={link.id}
-            title={link.title}
-            url={link.url}
-            createdAt={link.createdAt}
-            memo={link.memo}
-            onFlip={handleFlip}
-            onCopy={() => handleCopy(link.url)}
-          />
+          isEditing ? (
+            <LinkCardUpdateBack
+              key={link.id}
+              title={link.title}
+              url={link.url}
+              createdAt={link.createdAt}
+              memo={link.memo}
+              onFlip={handleFlip}
+              onSave={handleSave}
+            />
+          ) : (
+            <LinkCardBack
+              key={link.id}
+              title={link.title}
+              url={link.url}
+              createdAt={link.createdAt}
+              memo={link.memo}
+              onFlip={handleFlip}
+              onCopy={() => handleCopy(link.url)}
+            />
+          )
         ) : (
           <LinkCardFront
             key={link.id}
