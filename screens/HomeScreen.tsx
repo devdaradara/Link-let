@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Wallet from '../components/Wallet';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../screens/types';
+import { NavigationProp } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const [categories, setCategories] = useState<{ title: string, color: string }[]>([]);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,7 +33,7 @@ const HomeScreen = () => {
   }, []);
 
   const handleWalletPress = (category: string) => {
-    console.log(`${category} 눌림`);
+    navigation.navigate('CategoryNotes', { category });
   };
 
   const formatData = (data, numColumns) => {

@@ -6,6 +6,7 @@ import CategorySelectionScreen from './CategorySelectionScreen';
 import AddLinkDetailsScreen from './AddLinkDetailsScreen';
 import AddCategoryScreen from './AddCategoryScreen';
 import LinkCardScreen from './LinkCardScreen';
+import CategoryNotesScreen from './CategoryNotesScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +37,11 @@ function RootStack() {
         name="LinkCard"
         component={LinkCardScreen}
         options={{ title: 'Link Details' }}
+      />
+      <Stack.Screen 
+        name="CategoryNotes"
+        component={CategoryNotesScreen}
+        options={{ title: 'CategoryNotes' }}
       />
     </Stack.Navigator>
   );

@@ -21,7 +21,7 @@ function AddLinkDetailsScreen({ route }) {
   }, [navigation]);
 
   const saveLink = async () => {
-    const newLink = { id: Date.now().toString(), title, url, category, memo, createdAt: new Date().toISOString() };
+    const newLink = { id: Date.now().toString(), title, url, category, memo };
     const storedLinks = await AsyncStorage.getItem('links');
     const links = storedLinks ? JSON.parse(storedLinks) : [];
     links.push(newLink);
