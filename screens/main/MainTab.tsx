@@ -1,54 +1,100 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { MainTabParamList } from '../../navigation/types';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
-import CategorySelectionScreen from '../category/CategorySelectionScreen';
+import SearchScreen from '../search/SearchScreen';
+import CalendarScreen from '../calendar/CalendarScreen';
 import SettingsScreen from '../settings/SettingsScreen';
 
-const Tab = createBottomTabNavigator<MainTabParamList>();
+const Tab = createBottomTabNavigator();
 
-function MainTab() {
+const MainTab = () => {
+  const navigation = useNavigation();
+
+  const handleAddLink = () => {
+    navigation.navigate('CategorySelection', {
+      onSelect: (category: string) => {
+        navigation.navigate('AddLinkDetails', { category });
+      },
+    });
+  };
+
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: '#fc7a1e',
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          height: 60, 
-          paddingBottom: 10,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" color={color} size={size} />
-          ),
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          tabBarActiveTintColor: '#fc7a1e',
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            height: 60,
+            paddingBottom: 10,
+          },
         }}
-      />
-      <Tab.Screen
-        name="AddLink"
-        component={CategorySelectionScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="add-circle-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="settings" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          name="Search"
+          component={SearchScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="search" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="home" color={color} size={size} />
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+                <MaterialIcons name="settings" size={24} color="#000" style={{ marginRight: 15 }} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Calendar"
+          component={CalendarScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="calendar-today" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleAddLink}
+      >
+        <MaterialIcons name="add" style={styles.floatingButtonIcon} />
+      </TouchableOpacity>
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  floatingButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#fc7a1e',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    marginBottom: 60,
+  },
+  floatingButtonIcon: {
+    color: '#fff',
+    fontSize: 30,
+  },
+});
 
 export default MainTab;

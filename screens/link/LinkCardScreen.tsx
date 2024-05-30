@@ -65,6 +65,7 @@ const LinkCardScreen = ({ route, navigation }) => {
             createdAt={link.createdAt}
             memo={link.memo}
             onFlip={handleFlip}
+            onCopy={() => handleCopy(link.url)}
           />
         ) : (
           <LinkCardFront

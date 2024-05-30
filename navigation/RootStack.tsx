@@ -7,6 +7,7 @@ import AddLinkDetailsScreen from '../screens/link/AddLinkDetailsScreen';
 import AddCategoryScreen from '../screens/category/AddCategoryScreen';
 import LinkCardScreen from '../screens/link/LinkCardScreen';
 import CategoryNotesScreen from '../screens/category/CategoryNotesScreen';
+import SettingsScreen from '../screens/settings/SettingsScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,17 +22,17 @@ function RootStack() {
       <Stack.Screen
         name="CategorySelection"
         component={CategorySelectionScreen}
-        options={{ title: '카테고리 선택' }}
+        options={{ title: 'Category Selection' }}
       />
       <Stack.Screen
         name="AddLinkDetails"
         component={AddLinkDetailsScreen}
-        options={{ title: '링크 추가' }}
+        options={{ title: 'Add Link' }}
       />
       <Stack.Screen
         name="AddCategory"
         component={AddCategoryScreen}
-        options={{ title: '카테고리 추가' }}
+        options={{ title: 'Add Category' }}
       />
       <Stack.Screen
         name="LinkCard"
@@ -41,7 +42,12 @@ function RootStack() {
       <Stack.Screen 
         name="CategoryNotes"
         component={CategoryNotesScreen}
-        options={{ title: 'CategoryNotes' }}
+        options={{ title: 'Category Notes' }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: 'Settings' }}
       />
     </Stack.Navigator>
   );

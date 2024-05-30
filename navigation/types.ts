@@ -23,7 +23,7 @@ export type MainTabRouteProp = RouteProp<RootStackParamList, 'MainTab'>;
 /** RootStack */
 export type RootStackParamList = {
   MainTab: MainTabNavigationScreenParams;
-  CategorySelection: undefined;
+  CategorySelection: { onSelect: (category: string) => void };
   AddLinkDetails: { category: string };
   AddCategory: undefined;
   LinkCard: { id: string };
