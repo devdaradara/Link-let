@@ -1,32 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
 interface WalletProps {
   title: string;
   color: string;
-  onPress: () => void;
 }
 
-const Wallet: React.FC<WalletProps> = ({ title, color, onPress }) => {
+const WalletPreview: React.FC<WalletProps> = ({ title, color }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <View style={styles.container}>
       <View style={styles.tab}>
         <Text style={styles.tabTitle}>{title}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: color }]}>
-        {title === '추가' ? (
-          <Text style={styles.addButtonText}>+</Text>
-        ) : (
-          <Text style={styles.title}></Text>
-        )}
+        <Text style={styles.title}></Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     margin: 10,
     alignItems: 'flex-end',
   },
@@ -65,11 +59,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-  addButtonText: {
-    fontSize: 60,
-    fontWeight: 'bold',
-    color: '#505050',
-  },
 });
 
-export default Wallet;
+export default WalletPreview;

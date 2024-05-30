@@ -3,7 +3,7 @@ import React from 'react';
 import { MainTabParamList } from './types';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeScreen from './HomeScreen';
-import WalletScreen from './WalletScreen';
+import CategorySelectionScreen from './CategorySelectionScreen';
 import SettingsScreen from './SettingsScreen';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -23,7 +23,7 @@ function MainTab() {
       />
       <Tab.Screen
         name="AddLink"
-        component={WalletScreen}
+        component={CategorySelectionScreen}
         options={{
           title: '추가',
           tabBarIcon: ({ color, size }) => (
