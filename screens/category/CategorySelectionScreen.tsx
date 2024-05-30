@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Wallet from '../../components/Wallet';
@@ -44,13 +44,13 @@ const CategorySelectionScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={formatData([{ name: '추가', color: '#f9c784' }, ...categories], 2)}
+        data={formatData([{ name: 'Add', color: '#f9c784' }, ...categories], 2)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => {
           if (item.name.includes('blank')) {
             return <View style={[styles.item, styles.itemInvisible]} />;
           }
-          return item.name === '추가' ? (
+          return item.name === 'Add' ? (
             <Wallet
               title={item.name}
               color={item.color}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from '../../context/ThemeContext';
+import {useTheme} from '../../context/ThemeContext';
+import {useNavigation} from '@react-navigation/native';
 
 interface LinkCardHeaderProps {
   title: string;
@@ -11,24 +12,45 @@ interface LinkCardHeaderProps {
   isEditing: boolean;
 }
 
-const LinkCardHeader: React.FC<LinkCardHeaderProps> = ({ title, onBack, onEdit, onSave, isEditing }) => {
-  const { theme } = useTheme();
+const LinkCardHeader: React.FC<LinkCardHeaderProps> = ({
+  title,
+  onBack,
+  onEdit,
+  onSave,
+  isEditing,
+}) => {
+  const {theme} = useTheme();
+  const navigation = useNavigation();
   const styles = getStyles(theme);
+
+  const handleSave = () => {
+    onSave();
+    navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={onBack}>
-        <Icon name="arrow-back" size={24} color={theme === 'dark' ? '#fff' : '#000'} />
+        <Icon
+          name="arrow-back"
+          size={24}
+          color={theme === 'dark' ? '#fff' : '#000'}
+        />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       {isEditing ? (
-        <TouchableOpacity onPress={onSave} style={styles.iconMargin}>
+        <TouchableOpacity onPress={handleSave} style={styles.iconMargin}>
           <Icon name="check" size={24} color="#fc7a1e" />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity onPress={onEdit}>
-          <Icon name="edit" size={24} color="#fc7a1e" />
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={onEdit} style={styles.iconMargin}>
+            <Icon name="edit" size={24} color="#fc7a1e" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSave}>
+            <Icon name="check" size={24} color="#fc7a1e" />
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -50,7 +72,10 @@ const getStyles = (theme: string) =>
       color: theme === 'dark' ? '#fff' : '#000',
     },
     iconMargin: {
-      marginLeft: 16,
+      marginRight: 10,
+    },
+    buttons: {
+      flexDirection: 'row',
     },
   });
 

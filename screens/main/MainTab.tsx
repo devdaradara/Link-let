@@ -6,11 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import SearchScreen from '../search/SearchScreen';
 import CalendarScreen from '../calendar/CalendarScreen';
-import SettingsScreen from '../settings/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
-const MainTab = () => {
+const HomeScreenWithFloatingButton = () => {
   const navigation = useNavigation();
 
   const handleAddLink = () => {
@@ -23,6 +22,22 @@ const MainTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      <HomeScreen />
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleAddLink}
+      >
+        <MaterialIcons name="add" style={styles.floatingButtonIcon} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const MainTab = () => {
+  const navigation = useNavigation();
+  
+  return (
+    <>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -32,6 +47,9 @@ const MainTab = () => {
             height: 60,
             paddingBottom: 10,
           },
+          headerTitleAlign: 'center',
+          headerTintColor: '#000',
+          headerTitleStyle: { fontWeight: 'bold' },
         }}
       >
         <Tab.Screen
@@ -41,25 +59,15 @@ const MainTab = () => {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="search" color={color} size={size} />
             ),
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              color: '#000',
-              fontWeight: 'bold',
-            },
           }}
         />
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeScreenWithFloatingButton}
           options={{
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="home" color={color} size={size} />
             ),
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              color: '#000',
-              fontWeight: 'bold',
-            },
             headerRight: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                 <MaterialIcons name="settings" size={24} color="#000" style={{ marginRight: 15 }} />
@@ -74,23 +82,10 @@ const MainTab = () => {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="calendar-today" color={color} size={size} />
             ),
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              color: '#000',
-              fontWeight: 'bold',
-            },
           }}
         />
       </Tab.Navigator>
-      {navigation.isFocused() && (
-        <TouchableOpacity
-          style={styles.floatingButton}
-          onPress={handleAddLink}
-        >
-          <MaterialIcons name="add" style={styles.floatingButtonIcon} />
-        </TouchableOpacity>
-      )}
-    </View>
+    </>
   );
 };
 
@@ -106,7 +101,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
-    marginBottom: 60,
   },
   floatingButtonIcon: {
     color: '#fff',

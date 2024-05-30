@@ -14,7 +14,7 @@ const Wallet: React.FC<WalletProps> = ({ title, color, onPress }) => {
         <Text style={styles.tabTitle}>{title}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: color }]}>
-        {title === '추가' ? (
+        {title === 'Add' ? (
           <Text style={styles.addButtonText}>+</Text>
         ) : (
           <Text style={styles.title}></Text>
@@ -49,9 +49,9 @@ const styles = StyleSheet.create({
   card: {
     width: (Dimensions.get('window').width / 2) - 30,
     height: 120,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopLeftRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   addButtonText: {
-    fontSize: 60,
+    fontSize: 50,
     fontWeight: 'bold',
     color: '#505050',
   },

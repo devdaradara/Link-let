@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {View, FlatList, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute, useNavigation, RouteProp, useFocusEffect } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  useRoute,
+  useNavigation,
+  RouteProp,
+  useFocusEffect,
+} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import CategoryHeader from '../../components/header/CategoryHeader';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
-import { RootStackParamList, MainTabParamList } from '../../navigation/types';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { CompositeNavigationProp } from '@react-navigation/native';
+import {RootStackParamList, MainTabParamList} from '../../navigation/types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {CompositeNavigationProp} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;
@@ -18,29 +23,34 @@ type CategoryNotesNavigationProp = CompositeNavigationProp<
 >;
 
 const CategoryNotesScreen = () => {
-  const [notes, setNotes] = useState<{ id: string, title: string, url: string, memo: string, createdAt: string }[]>([]);
+  const [notes, setNotes] = useState<
+    {id: string; title: string; url: string; memo: string; createdAt: string}[]
+  >([]);
   const [isEditing, setIsEditing] = useState(false);
   const route = useRoute<CategoryNotesRouteProp>();
   const navigation = useNavigation<CategoryNotesNavigationProp>();
-  const { category } = route.params;
+  const {category} = route.params;
 
   const fetchNotes = async () => {
     try {
       const storedLinks = await AsyncStorage.getItem('links');
       if (storedLinks) {
         const allLinks = JSON.parse(storedLinks);
-        const categoryLinks = category === '전체 보기' ? allLinks : allLinks.filter(link => link.category === category);
+        const categoryLinks =
+          category === '전체 보기'
+            ? allLinks
+            : allLinks.filter(link => link.category === category);
         setNotes(categoryLinks);
       }
     } catch (error) {
-      console.error("Error fetching links: ", error);
+      console.error('Error fetching links: ', error);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       fetchNotes();
-    }, [category])
+    }, [category]),
   );
 
   const handleSave = async () => {
@@ -54,12 +64,12 @@ const CategoryNotesScreen = () => {
 
   const handleRemove = async (id: string) => {
     Alert.alert(
-      '삭제',
-      '정말 삭제하시겠습니까?',
+      'Delete',
+      'Are you sure you want to delete?',
       [
-        { text: '취소', style: 'cancel' },
+        {text: 'Cancel', style: 'cancel'},
         {
-          text: '삭제',
+          text: 'Delete',
           onPress: async () => {
             const storedLinks = await AsyncStorage.getItem('links');
             let links = storedLinks ? JSON.parse(storedLinks) : [];
@@ -71,7 +81,7 @@ const CategoryNotesScreen = () => {
           style: 'destructive',
         },
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
@@ -85,11 +95,11 @@ const CategoryNotesScreen = () => {
   };
 
   const handlePress = (id: string) => {
-    navigation.navigate('LinkCard', { id });
+    navigation.navigate('LinkCard', {id});
   };
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
+    navigation.setOptions({headerShown: false});
   }, [navigation]);
 
   return (
@@ -104,8 +114,8 @@ const CategoryNotesScreen = () => {
       />
       <FlatList
         data={notes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
           <ShortLinkCard
             key={item.id}
             title={item.title}

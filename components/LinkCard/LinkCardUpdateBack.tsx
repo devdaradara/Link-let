@@ -22,9 +22,9 @@ const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => 
         onChangeText={setUpdatedUrl}
         placeholder="URL"
       />
-      <Text style={styles.label}>생성일</Text>
+      <Text style={styles.label}>Date</Text>
       <Text style={styles.date}>{createdAt}</Text>
-      <Text style={styles.label}>메모</Text>
+      <Text style={styles.label}>Memo</Text>
       <TextInput
         style={[styles.input, styles.memoInput]}
         value={updatedMemo}

@@ -13,7 +13,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerTintColor: '#000',
+      }}
+    >
       <Stack.Screen
         name="MainTab"
         component={MainTab}

@@ -26,9 +26,9 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
           <Icon name="content-copy" size={24} color="#888" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.label}>생성일</Text>
+      <Text style={styles.label}>Date</Text>
       <Text style={styles.date}>{formatDate(createdAt)}</Text>
-      <Text style={styles.label}>메모</Text>
+      <Text style={styles.label}>Memo</Text>
       <Text style={styles.memo}>{memo}</Text>
       <View style={styles.flipButtonContainer}>
         <TouchableOpacity onPress={onFlip} style={styles.flipButton}>
