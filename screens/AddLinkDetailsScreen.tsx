@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import WriteHeader from '../components/WriteHeader';
+import WriteHeader from '../components/header/WriteHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootStackParamList } from '../screens/types';
@@ -21,7 +21,14 @@ function AddLinkDetailsScreen({ route }) {
   }, [navigation]);
 
   const saveLink = async () => {
-    const newLink = { id: Date.now().toString(), title, url, category, memo };
+    const newLink = {
+      id: Date.now().toString(),
+      title,
+      url,
+      category,
+      memo,
+      createdAt: new Date().toISOString(), // Save creation time
+    };
     const storedLinks = await AsyncStorage.getItem('links');
     const links = storedLinks ? JSON.parse(storedLinks) : [];
     links.push(newLink);
