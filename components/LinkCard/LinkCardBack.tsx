@@ -2,12 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const LinkCardBack = ({ title, url, createdAt, memo, onFlip }) => {
+const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.label}>URL</Text>
-      <Text style={styles.url}>{url}</Text>
+      <View style={styles.urlContainer}>
+        <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
+          {url}
+        </Text>
+        <TouchableOpacity onPress={onCopy}>
+          <Icon name="content-copy" size={24} color="#888" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.label}>생성일</Text>
       <Text style={styles.date}>{createdAt}</Text>
       <Text style={styles.label}>메모</Text>
@@ -42,10 +49,15 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 6,
   },
+  urlContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
   url: {
     fontSize: 16,
     color: '#0000ff',
-    marginBottom: 14,
+    flex: 1,
   },
   date: {
     fontSize: 14,
