@@ -10,6 +10,8 @@ import CalendarScreen from '../calendar/CalendarScreen';
 const Tab = createBottomTabNavigator();
 
 const MainTab = () => {
+  const navigation = useNavigation();
+  
   return (
     <Tab.Navigator
       initialRouteName="Home"
