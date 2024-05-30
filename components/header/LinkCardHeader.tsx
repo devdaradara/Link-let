@@ -40,7 +40,7 @@ const LinkCardHeader: React.FC<LinkCardHeaderProps> = ({
       <Text style={styles.title}>{title}</Text>
       {isEditing ? (
         <TouchableOpacity onPress={handleSave} style={styles.iconMargin}>
-          <Icon name="check" size={24} color="#fc7a1e" />
+          <Icon name="home" size={24} color="#fc7a1e" />
         </TouchableOpacity>
       ) : (
         <View style={styles.buttons}>

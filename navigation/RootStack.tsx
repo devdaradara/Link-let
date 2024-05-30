@@ -17,6 +17,7 @@ function RootStack() {
       screenOptions={{
         headerTitleAlign: 'center',
         headerTintColor: '#000',
+        headerBackTitleVisible: false, 
       }}
     >
       <Stack.Screen

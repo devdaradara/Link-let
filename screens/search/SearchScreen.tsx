@@ -1,15 +1,34 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {View, FlatList, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import SearchHeader from '../../components/header/SearchHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [allLinks, setAllLinks] = useState<{ id: string, title: string, url: string, category: string, memo: string, createdAt: string }[]>([]);
-  const [filteredLinks, setFilteredLinks] = useState<{ id: string, title: string, url: string, category: string, memo: string, createdAt: string }[]>([]);
+  const [allLinks, setAllLinks] = useState<
+    {
+      id: string;
+      title: string;
+      url: string;
+      category: string;
+      memo: string;
+      createdAt: string;
+    }[]
+  >([]);
+  const [filteredLinks, setFilteredLinks] = useState<
+    {
+      id: string;
+      title: string;
+      url: string;
+      category: string;
+      memo: string;
+      createdAt: string;
+    }[]
+  >([]);
   const navigation = useNavigation();
 
   const fetchLinks = async () => {
@@ -20,23 +39,23 @@ const SearchScreen = () => {
         setAllLinks(parsedLinks);
         setFilteredLinks(parsedLinks);
       } else {
-        console.log("No links found in storage.");
+        console.log('No links found in storage.');
       }
     } catch (error) {
-      console.error("Error fetching links: ", error);
+      console.error('Error fetching links: ', error);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       fetchLinks();
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
     if (searchQuery) {
       const filtered = allLinks.filter(link =>
-        link.title.toLowerCase().includes(searchQuery.toLowerCase())
+        link.title.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredLinks(filtered);
     } else {
@@ -46,7 +65,7 @@ const SearchScreen = () => {
 
   const handleSearch = () => {
     const filtered = allLinks.filter(link =>
-      link.title.toLowerCase().includes(searchQuery.toLowerCase())
+      link.title.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredLinks(filtered);
   };
@@ -57,15 +76,18 @@ const SearchScreen = () => {
   };
 
   const handlePress = (id: string) => {
-    navigation.navigate('LinkCard', { id });
+    navigation.navigate('LinkCard', {id});
   };
 
   useEffect(() => {
-    navigation.setOptions({ headerShown: false });
+    navigation.setOptions({headerShown: false});
   }, [navigation]);
+
+  const {top} = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
+      <View style={[styles.topWhite, {height: top}]} />
       <SearchHeader
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -73,8 +95,8 @@ const SearchScreen = () => {
       />
       <FlatList
         data={filteredLinks}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
           <ShortLinkCard
             key={item.id}
             title={item.title}
@@ -82,6 +104,8 @@ const SearchScreen = () => {
             createdAt={item.createdAt}
             onCopy={() => handleCopy(item.url)}
             onPress={() => handlePress(item.id)}
+            isEditing={false}
+            onRemove={() => {}}
           />
         )}
         contentContainerStyle={styles.contentContainer}
@@ -91,6 +115,9 @@ const SearchScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  topWhite: {
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#e7e7e7',

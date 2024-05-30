@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AddCategoryScreen = ({ navigation }) => {
   const [categoryName, setCategoryName] = useState('');
   const [color, setColor] = useState('#ffffff');
+  const colorInputRef = useRef<TextInput>(null);
 
   const saveCategory = async () => {
     try {
@@ -33,30 +34,38 @@ const AddCategoryScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.previewContainer}>
-        <WalletPreview title={categoryName || '미리보기'} color={color} />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>CATEGORY</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="category"
-          value={categoryName}
-          onChangeText={setCategoryName}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>COLOR</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="#ffffff"
-          value={color}
-          onChangeText={handleColorChange}
-        />
-      </View>
-      <TouchableOpacity style={styles.saveButton} onPress={saveCategory}>
-        <Text style={styles.saveButtonText}>SAVE</Text>
-      </TouchableOpacity>
+      <KeyboardAvoidingView
+        style={styles.avoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.previewContainer}>
+          <WalletPreview title={categoryName || '미리보기'} color={color} />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>CATEGORY</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="category"
+            value={categoryName}
+            onChangeText={setCategoryName}
+            returnKeyType="next"
+            onSubmitEditing={() => colorInputRef.current?.focus()}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>COLOR</Text>
+          <TextInput
+            ref={colorInputRef}
+            style={styles.input}
+            placeholder="#ffffff"
+            value={color}
+            onChangeText={handleColorChange}
+          />
+        </View>
+        <TouchableOpacity style={styles.saveButton} onPress={saveCategory}>
+          <Text style={styles.saveButtonText}>SAVE</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -65,6 +74,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e7e7e7',
+  },
+  avoidingView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,

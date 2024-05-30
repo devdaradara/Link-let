@@ -14,6 +14,7 @@ import {RootStackParamList, MainTabParamList} from '../../navigation/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;
 
@@ -102,8 +103,11 @@ const CategoryNotesScreen = () => {
     navigation.setOptions({headerShown: false});
   }, [navigation]);
 
+  const {top} = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
+      <View style={[styles.topWhite, {height: top}]} />
       <CategoryHeader
         title={category}
         onBack={handleBack}
@@ -129,11 +133,14 @@ const CategoryNotesScreen = () => {
         )}
         contentContainerStyle={styles.contentContainer}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  topWhite: {
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#e7e7e7',
