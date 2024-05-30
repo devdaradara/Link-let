@@ -8,7 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 /** MainTab */
 export type MainTabParamList = {
-  Home: undefined;
+  Home: { refresh?: boolean }; 
   AddLink: undefined;
   Settings: undefined;
 };
