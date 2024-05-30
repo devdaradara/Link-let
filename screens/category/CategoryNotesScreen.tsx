@@ -45,7 +45,7 @@ const CategoryNotesScreen = () => {
 
   const handleSave = async () => {
     setIsEditing(false);
-    navigation.navigate('MainTab', { screen: 'Home', params: { refresh: true } });
+    fetchNotes();
   };
 
   const handleEdit = () => {
@@ -66,7 +66,7 @@ const CategoryNotesScreen = () => {
             links = links.filter(link => link.id !== id);
             await AsyncStorage.setItem('links', JSON.stringify(links));
             setNotes(links.filter(link => link.category === category));
-            navigation.navigate('MainTab', { screen: 'Home', params: { refresh: true } });
+            fetchNotes();
           },
           style: 'destructive',
         },
@@ -113,6 +113,8 @@ const CategoryNotesScreen = () => {
             createdAt={item.createdAt}
             onCopy={() => handleCopy(item.url)}
             onPress={() => handlePress(item.id)}
+            isEditing={isEditing}
+            onRemove={() => handleRemove(item.id)}
           />
         )}
         contentContainerStyle={styles.contentContainer}

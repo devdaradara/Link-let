@@ -13,7 +13,7 @@ const getThumbnailUrl = (url) => {
   return `https://s2.googleusercontent.com/s2/favicons?domain=${url}`;
 };
 
-const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress }) => {
+const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress, isEditing, onRemove }) => {
   const thumbnailUrl = getThumbnailUrl(url);
 
   const getRelativeTime = (date) => {
@@ -30,15 +30,12 @@ const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.card}>
-      <Image
-        source={{ uri: thumbnailUrl }}
-        style={styles.thumbnail}
-      />
+      <Image source={{ uri: thumbnailUrl }} style={styles.thumbnail} />
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.date}>{getRelativeTime(createdAt)}</Text>
         </View>
+          <Text style={styles.date}>{getRelativeTime(createdAt)}</Text>
         <View style={styles.urlContainer}>
           <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
             {url}
@@ -47,6 +44,11 @@ const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress }) => {
             <Icon name="content-copy" size={20} color="#888" />
           </TouchableOpacity>
         </View>
+        {isEditing && (
+          <TouchableOpacity onPress={onRemove} style={styles.removeButton}>
+            <Icon name="delete" size={24} color="#fc7a1e" />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -63,10 +65,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   thumbnail: {
-    width: 60,
-    height: 60,
+    width: 75,
+    height: 75,
     borderRadius: 8,
-    marginRight: 10,
+    marginRight: 15,
     alignSelf: 'center',
   },
   content: {
@@ -82,6 +84,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'black',
   },
   date: {
     fontSize: 12,
@@ -96,6 +99,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: '#485696',
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
 });
 
