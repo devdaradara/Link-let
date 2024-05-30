@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinkCardHeader from '../components/header/LinkCardHeader';
+import LinkCardHeader from '../../components/header/LinkCardHeader';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
-import {RootStackParamList, MainTabParamList} from './types';
+import {RootStackParamList, MainTabParamList } from '../../navigation/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {CompositeNavigationProp} from '@react-navigation/native';
 

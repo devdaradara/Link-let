@@ -3,8 +3,8 @@ import { View, Text, FlatList, StyleSheet, Clipboard, Alert, TouchableOpacity } 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CategoryHeader from '../components/header/CategoryHeader';
-import { RootStackParamList } from '../screens/types';
+import CategoryHeader from '../../components/header/CategoryHeader';
+import { RootStackParamList } from '../../navigation/types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;

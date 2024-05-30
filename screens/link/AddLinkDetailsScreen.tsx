@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import WriteHeader from '../components/header/WriteHeader';
+import WriteHeader from '../../components/header/WriteHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { RootStackParamList } from '../screens/types';
+import { RootStackParamList  } from '../../navigation/types';
 
 function AddLinkDetailsScreen({ route }) {
   const { category } = route.params;

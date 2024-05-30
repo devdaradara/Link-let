@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import WalletPreview from '../components/WalletPreview';
+import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddCategoryScreen = ({ navigation }) => {

@@ -2,7 +2,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import TransparentCircleButton from '.././TransparentCircleButton';
-import { RootStackParamList } from '../../screens/types';
+import { RootStackParamList } from '../../navigation/types';
 
 function WriteHeader({ onSave, title, setTitle }) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

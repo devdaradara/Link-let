@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Wallet from '../components/Wallet';
+import Wallet from '../../components/Wallet';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation/types';
+import { NavigationProp } from '@react-navigation/native';
 
-const CategorySelectionScreen = ({ navigation }) => {
-  const [categories, setCategories] = useState<{ name: string, color: string }[]>([]);
+const HomeScreen = () => {
+  const [categories, setCategories] = useState<{ title: string, color: string }[]>([]);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const storedCategories = await AsyncStorage.getItem('categories');
         if (storedCategories) {
-          setCategories(JSON.parse(storedCategories));
+          const parsedCategories = JSON.parse(storedCategories).map(category => ({
+            title: category.name,
+            color: category.color
+          }));
+          setCategories([{ title: '전체 보기', color: '#cccccc' }, ...parsedCategories]);
         } else {
           console.log("No categories found in storage.");
+          setCategories([{ title: '전체 보기', color: '#cccccc' }]);
         }
       } catch (error) {
         console.error("Error fetching categories: ", error);
@@ -23,15 +32,15 @@ const CategorySelectionScreen = ({ navigation }) => {
     fetchCategories();
   }, []);
 
-  const handleSelectCategory = (category) => {
-    navigation.navigate('AddLinkDetails', { category });
+  const handleWalletPress = (category: string) => {
+    navigation.navigate('CategoryNotes', { category });
   };
 
   const formatData = (data, numColumns) => {
     const numberOfFullRows = Math.floor(data.length / numColumns);
     let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
     while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-      data.push({ name: `blank-${numberOfElementsLastRow}`, color: 'transparent' });
+      data.push({ title: `blank-${numberOfElementsLastRow}`, color: 'transparent' });
       numberOfElementsLastRow++;
     }
     return data;
@@ -40,23 +49,17 @@ const CategorySelectionScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={formatData([{ name: '추가', color: '#cccccc' }, ...categories], 2)}
-        keyExtractor={(item) => item.name}
+        data={formatData(categories, 2)}
+        keyExtractor={(item) => item.title}
         renderItem={({ item }) => {
-          if (item.name.includes('blank')) {
+          if (item.title.includes('blank')) {
             return <View style={[styles.item, styles.itemInvisible]} />;
           }
-          return item.name === '추가' ? (
+          return (
             <Wallet
-              title={item.name}
+              title={item.title}
               color={item.color}
-              onPress={() => navigation.navigate('AddCategory')}
-            />
-          ) : (
-            <Wallet
-              title={item.name}
-              color={item.color}
-              onPress={() => handleSelectCategory(item.name)}
+              onPress={() => handleWalletPress(item.title)}
             />
           );
         }}
@@ -91,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategorySelectionScreen;
+export default HomeScreen;

@@ -1,12 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { RootStackParamList } from './types';
-import MainTab from './MainTab';
-import CategorySelectionScreen from './CategorySelectionScreen';
-import AddLinkDetailsScreen from './AddLinkDetailsScreen';
-import AddCategoryScreen from './AddCategoryScreen';
-import LinkCardScreen from './LinkCardScreen';
-import CategoryNotesScreen from './CategoryNotesScreen';
+import MainTab from '../screens/main/MainTab';
+import CategorySelectionScreen from '../screens/category/CategorySelectionScreen';
+import AddLinkDetailsScreen from '../screens/link/AddLinkDetailsScreen';
+import AddCategoryScreen from '../screens/category/AddCategoryScreen';
+import LinkCardScreen from '../screens/link/LinkCardScreen';
+import CategoryNotesScreen from '../screens/category/CategoryNotesScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
