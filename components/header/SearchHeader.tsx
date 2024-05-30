@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '../../context/ThemeContext';
 
 interface SearchHeaderProps {
   searchQuery: string;
@@ -9,38 +10,44 @@ interface SearchHeaderProps {
 }
 
 const SearchHeader: React.FC<SearchHeaderProps> = ({ searchQuery, setSearchQuery, onSearch }) => {
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   return (
     <View style={styles.header}>
       <TextInput
         style={styles.searchInput}
         placeholder="Search..."
+        placeholderTextColor={theme === 'dark' ? '#aaa' : '#555'}
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
       <TouchableOpacity onPress={onSearch}>
-        <Icon name="search" size={24} color="#000" />
+        <Icon name="search" size={24} color={theme === 'dark' ? '#fff' : '#000'} />
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-});
+const getStyles = (theme: string) =>
+  StyleSheet.create({
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      backgroundColor: theme === 'dark' ? '#333' : '#fff',
+    },
+    searchInput: {
+      flex: 1,
+      height: 40,
+      borderColor: theme === 'dark' ? '#555' : '#ccc',
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      marginRight: 10,
+      color: theme === 'dark' ? '#fff' : '#000',
+    },
+  });
 
 export default SearchHeader;
