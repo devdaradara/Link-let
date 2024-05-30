@@ -2,8 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+const getThumbnailUrl = (url) => {
+  const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+  const matches = youtubeRegex.exec(url);
+
+  if (matches && matches[1]) {
+    return `https://img.youtube.com/vi/${matches[1]}/maxresdefault.jpg`;
+  }
+
+  return `https://s2.googleusercontent.com/s2/favicons?domain=${url}`;
+};
+
 const ShortLinkCard = ({ title, url, memo, createdAt, onCopy, onPress }) => {
-  const thumbnailUrl = `https://s2.googleusercontent.com/s2/favicons?domain=${url}`;
+  const thumbnailUrl = getThumbnailUrl(url);
 
   const getRelativeTime = (date) => {
     const now = new Date();

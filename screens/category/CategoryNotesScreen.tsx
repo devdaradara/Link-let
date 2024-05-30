@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,7 +8,7 @@ import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import { RootStackParamList, MainTabParamList } from '../../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;
 
@@ -30,7 +30,7 @@ const CategoryNotesScreen = () => {
         const storedLinks = await AsyncStorage.getItem('links');
         if (storedLinks) {
           const allLinks = JSON.parse(storedLinks);
-          const categoryLinks = allLinks.filter(link => link.category === category);
+          const categoryLinks = category === '전체 보기' ? allLinks : allLinks.filter(link => link.category === category);
           setNotes(categoryLinks);
         }
       } catch (error) {
@@ -96,7 +96,7 @@ const CategoryNotesScreen = () => {
         title={category}
         onBack={handleBack}
         onEdit={handleEdit}
-        onDelete={() => handleRemove(null)} // Add logic to remove the entire category if needed
+        onDelete={() => handleRemove('')}
         onSave={handleSave}
         isEditing={isEditing}
       />

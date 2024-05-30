@@ -1,20 +1,37 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
 
-const CategoryHeader = ({ title, onEdit }) => {
-  const navigation = useNavigation();
+interface CategoryHeaderProps {
+  title: string;
+  onBack: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onSave: () => void;
+  isEditing: boolean;
+}
 
+const CategoryHeader: React.FC<CategoryHeaderProps> = ({ title, onBack, onEdit, onDelete, onSave, isEditing }) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={onBack}>
         <Icon name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
-      <TouchableOpacity onPress={onEdit}>
-        <Icon name="edit" size={24} color="#000" />
-      </TouchableOpacity>
+      {isEditing ? (
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={onSave}>
+            <Icon name="check" size={24} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onDelete} style={styles.iconMargin}>
+            <Icon name="delete" size={24} color="#000" />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity onPress={onEdit}>
+          <Icon name="edit" size={24} color="#000" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -33,6 +50,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconMargin: {
+    marginLeft: 16,
   },
 });
 
