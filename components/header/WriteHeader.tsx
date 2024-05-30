@@ -39,7 +39,7 @@ function WriteHeader({ onSave, title, setTitle }) {
 
 const styles = StyleSheet.create({
   block: {
-    height: 70,
+    height: 56,
     paddingHorizontal: 8,
     flexDirection: 'row',
     alignItems: 'center',

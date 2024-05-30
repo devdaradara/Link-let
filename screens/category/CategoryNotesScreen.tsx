@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Clipboard, Alert, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryHeader from '../../components/header/CategoryHeader';
-import { RootStackParamList } from '../../navigation/types';
+import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
+import { RootStackParamList, MainTabParamList } from '../../navigation/types';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { CompositeNavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;
+
+type CategoryNotesNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RootStackParamList, 'CategoryNotes'>,
+  StackNavigationProp<MainTabParamList>
+>;
 
 const CategoryNotesScreen = () => {
   const [notes, setNotes] = useState<{ id: string, title: string, url: string, memo: string, createdAt: string }[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const route = useRoute<CategoryNotesRouteProp>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<CategoryNotesNavigationProp>();
   const { category } = route.params;
 
   useEffect(() => {
@@ -42,7 +50,7 @@ const CategoryNotesScreen = () => {
     setIsEditing(true);
   };
 
-  const handleRemove = async (id) => {
+  const handleRemove = async (id: string) => {
     Alert.alert(
       '삭제',
       '정말 삭제하시겠습니까?',
@@ -65,13 +73,17 @@ const CategoryNotesScreen = () => {
     );
   };
 
-  const handleCopy = (url) => {
+  const handleCopy = (url: string) => {
     Clipboard.setString(url);
     Alert.alert('URL 복사됨', 'URL이 클립보드에 복사되었습니다.');
   };
 
   const handleBack = () => {
     navigation.goBack();
+  };
+
+  const handlePress = (id: string) => {
+    navigation.navigate('LinkCard', { id });
   };
 
   React.useLayoutEffect(() => {
@@ -92,17 +104,15 @@ const CategoryNotesScreen = () => {
         data={notes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.noteContainer}>
-            <Text style={styles.title}>{item.title}</Text>
-            <View style={styles.urlContainer}>
-              <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">{item.url}</Text>
-              <TouchableOpacity onPress={() => handleCopy(item.url)}>
-                <Icon name="content-copy" size={24} color="#888" style={styles.icon} />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.memo}>{item.memo}</Text>
-            <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString()}</Text>
-          </View>
+          <ShortLinkCard
+            key={item.id}
+            title={item.title}
+            url={item.url}
+            memo={item.memo}
+            createdAt={item.createdAt}
+            onCopy={() => handleCopy(item.url)}
+            onPress={() => handlePress(item.id)}
+          />
         )}
         contentContainerStyle={styles.contentContainer}
       />
@@ -115,36 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
-  },
-  noteContainer: {
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  urlContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  url: {
-    flex: 1,
-    color: 'blue',
-  },
-  icon: {
-    marginLeft: 8,
-  },
-  memo: {
-    marginTop: 8,
-  },
-  date: {
-    marginTop: 8,
-    fontSize: 12,
-    color: 'gray',
   },
   contentContainer: {
     paddingBottom: 20,
