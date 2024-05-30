@@ -10,12 +10,19 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 function MainTab() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 60, 
+          paddingBottom: 10,
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          title: '홈',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="home" color={color} size={size} />
           ),
@@ -25,7 +32,6 @@ function MainTab() {
         name="AddLink"
         component={CategorySelectionScreen}
         options={{
-          title: '추가',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="add-circle-outline" color={color} size={size} />
           ),
@@ -35,7 +41,6 @@ function MainTab() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          title: '환경설정',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="settings" color={color} size={size} />
           ),
