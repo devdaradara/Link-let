@@ -108,7 +108,6 @@ const CategoryNotesScreen = () => {
             key={item.id}
             title={item.title}
             url={item.url}
-            memo={item.memo}
             createdAt={item.createdAt}
             onCopy={() => handleCopy(item.url)}
             onPress={() => handlePress(item.id)}
