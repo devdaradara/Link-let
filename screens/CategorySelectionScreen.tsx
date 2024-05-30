@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Wallet from '../components/Wallet';
 
@@ -27,13 +27,26 @@ const CategorySelectionScreen = ({ navigation }) => {
     navigation.navigate('AddLinkDetails', { category });
   };
 
+  const formatData = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+    let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+    while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+      data.push({ name: `blank-${numberOfElementsLastRow}`, color: 'transparent' });
+      numberOfElementsLastRow++;
+    }
+    return data;
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={[{ name: '추가', color: '#cccccc' }, ...categories]}
+        data={formatData([{ name: '추가', color: '#cccccc' }, ...categories], 2)}
         keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          item.name === '추가' ? (
+        renderItem={({ item }) => {
+          if (item.name.includes('blank')) {
+            return <View style={[styles.item, styles.itemInvisible]} />;
+          }
+          return item.name === '추가' ? (
             <Wallet
               title={item.name}
               color={item.color}
@@ -45,8 +58,8 @@ const CategorySelectionScreen = ({ navigation }) => {
               color={item.color}
               onPress={() => handleSelectCategory(item.name)}
             />
-          )
-        )}
+          );
+        }}
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.contentContainer}
@@ -64,6 +77,17 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingVertical: 20,
+  },
+  item: {
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 1,
+    height: 150,
+  },
+  itemInvisible: {
+    backgroundColor: 'transparent',
   },
 });
 

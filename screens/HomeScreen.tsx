@@ -1,32 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Wallet from '../components/Wallet';
 
-const categories = [
-  { title: '전체보기', color: '#cdb4db' },
-  { title: '카테고리1', color: '#ffc8dd' },
-  { title: '카테고리2', color: '#bde0fe' },
-  { title: '카테고리3', color: '#e9edc9' },
-];
-
 const HomeScreen = () => {
-  // 월렛을 눌렀을 때의 이벤트 핸들러
+  const [categories, setCategories] = useState<{ title: string, color: string }[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const storedCategories = await AsyncStorage.getItem('categories');
+        if (storedCategories) {
+          const parsedCategories = JSON.parse(storedCategories).map(category => ({
+            title: category.name,
+            color: category.color
+          }));
+          setCategories([{ title: '전체 보기', color: '#cccccc' }, ...parsedCategories]);
+        } else {
+          console.log("No categories found in storage.");
+          setCategories([{ title: '전체 보기', color: '#cccccc' }]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories: ", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleWalletPress = (category: string) => {
     console.log(`${category} 눌림`);
+  };
+
+  const formatData = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+    let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+    while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+      data.push({ title: `blank-${numberOfElementsLastRow}`, color: 'transparent' });
+      numberOfElementsLastRow++;
+    }
+    return data;
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={categories}
+        data={formatData(categories, 2)}
         keyExtractor={(item) => item.title}
-        renderItem={({ item }) => (
-          <Wallet
-            title={item.title}
-            color={item.color}
-            onPress={() => handleWalletPress(item.title)}
-          />
-        )}
+        renderItem={({ item }) => {
+          if (item.title.includes('blank')) {
+            return <View style={[styles.item, styles.itemInvisible]} />;
+          }
+          return (
+            <Wallet
+              title={item.title}
+              color={item.color}
+              onPress={() => handleWalletPress(item.title)}
+            />
+          );
+        }}
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.contentContainer}
@@ -44,6 +76,17 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingVertical: 20,
+  },
+  item: {
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 1,
+    height: 150,
+  },
+  itemInvisible: {
+    backgroundColor: 'transparent',
   },
 });
 
