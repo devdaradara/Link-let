@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, FlatList, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import SearchHeader from '../../components/header/SearchHeader';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,24 +12,26 @@ const SearchScreen = () => {
   const [filteredLinks, setFilteredLinks] = useState<{ id: string, title: string, url: string, category: string, memo: string, createdAt: string }[]>([]);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchLinks = async () => {
-      try {
-        const storedLinks = await AsyncStorage.getItem('links');
-        if (storedLinks) {
-          const parsedLinks = JSON.parse(storedLinks);
-          setAllLinks(parsedLinks);
-          setFilteredLinks(parsedLinks);
-        } else {
-          console.log("No links found in storage.");
-        }
-      } catch (error) {
-        console.error("Error fetching links: ", error);
+  const fetchLinks = async () => {
+    try {
+      const storedLinks = await AsyncStorage.getItem('links');
+      if (storedLinks) {
+        const parsedLinks = JSON.parse(storedLinks);
+        setAllLinks(parsedLinks);
+        setFilteredLinks(parsedLinks);
+      } else {
+        console.log("No links found in storage.");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching links: ", error);
+    }
+  };
 
-    fetchLinks();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchLinks();
+    }, [])
+  );
 
   useEffect(() => {
     if (searchQuery) {

@@ -1,33 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Wallet from '../../components/Wallet';
 
-const CategorySelectionScreen = ({ navigation }) => {
+const CategorySelectionScreen = () => {
   const [categories, setCategories] = useState<{ name: string, color: string }[]>([]);
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const storedCategories = await AsyncStorage.getItem('categories');
-        if (storedCategories) {
-          setCategories(JSON.parse(storedCategories));
-        } else {
-          console.log("No categories found in storage.");
-        }
-      } catch (error) {
-        console.error("Error fetching categories: ", error);
+  const fetchCategories = async () => {
+    try {
+      const storedCategories = await AsyncStorage.getItem('categories');
+      if (storedCategories) {
+        setCategories(JSON.parse(storedCategories));
+      } else {
+        console.log("No categories found in storage.");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching categories: ", error);
+    }
+  };
 
-    fetchCategories();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchCategories();
+    }, [])
+  );
 
-  const handleSelectCategory = (category) => {
+  const handleSelectCategory = (category: string) => {
     navigation.navigate('AddLinkDetails', { category });
   };
 
-  const formatData = (data, numColumns) => {
+  const formatData = (data: { name: string, color: string }[], numColumns: number) => {
     const numberOfFullRows = Math.floor(data.length / numColumns);
     let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
     while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {

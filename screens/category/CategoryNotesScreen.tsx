@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, FlatList, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
+import { useRoute, useNavigation, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryHeader from '../../components/header/CategoryHeader';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
@@ -24,22 +24,24 @@ const CategoryNotesScreen = () => {
   const navigation = useNavigation<CategoryNotesNavigationProp>();
   const { category } = route.params;
 
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const storedLinks = await AsyncStorage.getItem('links');
-        if (storedLinks) {
-          const allLinks = JSON.parse(storedLinks);
-          const categoryLinks = category === '전체 보기' ? allLinks : allLinks.filter(link => link.category === category);
-          setNotes(categoryLinks);
-        }
-      } catch (error) {
-        console.error("Error fetching links: ", error);
+  const fetchNotes = async () => {
+    try {
+      const storedLinks = await AsyncStorage.getItem('links');
+      if (storedLinks) {
+        const allLinks = JSON.parse(storedLinks);
+        const categoryLinks = category === '전체 보기' ? allLinks : allLinks.filter(link => link.category === category);
+        setNotes(categoryLinks);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching links: ", error);
+    }
+  };
 
-    fetchNotes();
-  }, [category]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotes();
+    }, [category])
+  );
 
   const handleSave = async () => {
     setIsEditing(false);

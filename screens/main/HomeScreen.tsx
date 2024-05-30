@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Wallet from '../../components/Wallet';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/types';
 import { NavigationProp } from '@react-navigation/native';
 
@@ -10,27 +10,29 @@ const HomeScreen = () => {
   const [categories, setCategories] = useState<{ title: string, color: string }[]>([]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const storedCategories = await AsyncStorage.getItem('categories');
-        if (storedCategories) {
-          const parsedCategories = JSON.parse(storedCategories).map(category => ({
-            title: category.name,
-            color: category.color
-          }));
-          setCategories([{ title: '전체 보기', color: '#f9c784' }, ...parsedCategories]);
-        } else {
-          console.log("No categories found in storage.");
-          setCategories([{ title: '전체 보기', color: '#f9c784' }]);
-        }
-      } catch (error) {
-        console.error("Error fetching categories: ", error);
+  const fetchCategories = async () => {
+    try {
+      const storedCategories = await AsyncStorage.getItem('categories');
+      if (storedCategories) {
+        const parsedCategories = JSON.parse(storedCategories).map(category => ({
+          title: category.name,
+          color: category.color
+        }));
+        setCategories([{ title: '전체 보기', color: '#f9c784' }, ...parsedCategories]);
+      } else {
+        console.log("No categories found in storage.");
+        setCategories([{ title: '전체 보기', color: '#f9c784' }]);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching categories: ", error);
+    }
+  };
 
-    fetchCategories();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchCategories();
+    }, [])
+  );
 
   const handleWalletPress = (category: string) => {
     navigation.navigate('CategoryNotes', { category });
