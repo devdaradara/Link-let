@@ -1,117 +1,82 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Alert, ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinkCardHeader from '../../components/header/LinkCardHeader';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import LinkCardFront from '../../components/LinkCard/LinkCardFront';
+import LinkCardBack from '../../components/LinkCard/LinkCardBack';
+import CategoryHeader from '../../components/header/CategoryHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {format} from 'date-fns';
-import {RootStackParamList, MainTabParamList } from '../../navigation/types';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {CompositeNavigationProp} from '@react-navigation/native';
 
-type LinkCardScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<RootStackParamList, 'LinkCard'>,
-  StackNavigationProp<MainTabParamList, 'Home'>
->;
+interface Link {
+  id: string;
+  title: string;
+  url: string;
+  category: string;
+  memo: string;
+  createdAt: string;
+}
 
-const LinkCardScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<LinkCardScreenNavigationProp>();
-  const {link} = route.params as {
-    link: {
-      id: string;
-      title: string;
-      url: string;
-      category: string;
-      memo: string;
-      createdAt: string;
-    };
-  };
-  const [title, setTitle] = useState(link.title);
-  const [url, setUrl] = useState(link.url);
-  const [memo, setMemo] = useState(link.memo);
-  const [isEditing, setIsEditing] = useState(false);
+const LinkCardScreen = ({ route, navigation }) => {
+  const { id } = route.params;
+  const [link, setLink] = useState<Link | null>(null);
+  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
-    navigation.setOptions({headerShown: false});
+    const fetchLink = async () => {
+      const storedLinks = await AsyncStorage.getItem('links');
+      const allLinks: Link[] = storedLinks ? JSON.parse(storedLinks) : [];
+      const foundLink = allLinks.find(l => l.id === id);
+
+      setLink(foundLink || null);
+    };
+
+    fetchLink();
+  }, [id]);
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const saveLink = async () => {
-    const updatedLink = {...link, title, url, memo};
-    const storedLinks = await AsyncStorage.getItem('links');
-    let links = storedLinks ? JSON.parse(storedLinks) : [];
-    links = links.map(l => (l.id === updatedLink.id ? updatedLink : l));
-    await AsyncStorage.setItem('links', JSON.stringify(links));
-
-    setIsEditing(false);
-    navigation.navigate('MainTab', {screen: 'Home', params: {refresh: true}});
-  };
-
-  const removeLink = async () => {
-    Alert.alert(
-      '삭제',
-      '정말 삭제하시겠습니까?',
-      [
-        {text: '취소', style: 'cancel'},
-        {
-          text: '삭제',
-          onPress: async () => {
-            const storedLinks = await AsyncStorage.getItem('links');
-            let links = storedLinks ? JSON.parse(storedLinks) : [];
-            links = links.filter(l => l.id !== link.id);
-            await AsyncStorage.setItem('links', JSON.stringify(links));
-            navigation.navigate('MainTab', {
-              screen: 'Home',
-              params: {refresh: true},
-            });
-          },
-          style: 'destructive',
-        },
-      ],
-      {cancelable: true},
-    );
-  };
-
-  const copyToClipboard = () => {
+  const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('복사됨', 'URL이 클립보드에 복사되었습니다.');
+    Alert.alert('URL이 복사되었습니다.');
   };
+
+  const handleFlip = () => {
+    setFlipped(!flipped);
+  };
+
+  if (!link) {
+    return (
+      <View style={styles.container}>
+        <Text>링크를 불러오는 중입니다...</Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <LinkCardHeader
-        title={title}
-        onSave={saveLink}
-        onEdit={() => setIsEditing(!isEditing)}
-        onRemove={removeLink}
-        isEditing={isEditing}
-      />
-      <View style={styles.content}>
-        <View style={styles.field}>
-          <View style={styles.field}>
-            <Text style={styles.label}>생성 시간</Text>
-            <Text style={styles.date}>
-              {format(new Date(link.createdAt), 'yyyy-MM-dd HH:mm:ss')}
-            </Text>
-          </View>
-          <Text style={styles.label}>URL</Text>
-          <View style={styles.urlContainer}>
-            <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
-              {url}
-            </Text>
-            <TouchableOpacity onPress={copyToClipboard}>
-              <Icon name="content-copy" size={24} color="#888" />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>메모</Text>
-          <Text style={styles.memo}>{memo}</Text>
-        </View>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <CategoryHeader title={link.category} onEdit={() => {}} />
+      <ScrollView contentContainerStyle={styles.cardContainer}>
+        {flipped ? (
+          <LinkCardBack
+            key={link.id}
+            title={link.title}
+            url={link.url}
+            createdAt={link.createdAt}
+            memo={link.memo}
+            onFlip={handleFlip}
+          />
+        ) : (
+          <LinkCardFront
+            key={link.id}
+            title={link.title}
+            url={link.url}
+            onCopy={() => handleCopy(link.url)}
+            onFlip={handleFlip}
+          />
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -119,40 +84,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
   },
-  content: {
+  cardContainer: {
+    paddingTop: 100,
     padding: 16,
-  },
-  field: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  urlContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-  },
-  url: {
-    fontSize: 16,
-    color: '#0000ff',
-    flex: 1,
-  },
-  memo: {
-    fontSize: 16,
-  },
-  icon: {
-    marginLeft: 8,
-  },
-  memoIcon: {
-    marginLeft: 8,
-    alignSelf: 'flex-start',
-  },
-  date: {
-    fontSize: 16,
-    color: '#888',
   },
 });
 

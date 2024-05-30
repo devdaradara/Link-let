@@ -5,7 +5,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import WriteHeader from '../../components/header/WriteHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { RootStackParamList  } from '../../navigation/types';
+import { RootStackParamList } from '../../navigation/types';
 
 function AddLinkDetailsScreen({ route }) {
   const { category } = route.params;
@@ -21,14 +21,7 @@ function AddLinkDetailsScreen({ route }) {
   }, [navigation]);
 
   const saveLink = async () => {
-    const newLink = {
-      id: Date.now().toString(),
-      title,
-      url,
-      category,
-      memo,
-      createdAt: new Date().toISOString(), // Save creation time
-    };
+    const newLink = { id: Date.now().toString(), title, url, category, memo, createdAt: new Date().toISOString() };
     const storedLinks = await AsyncStorage.getItem('links');
     const links = storedLinks ? JSON.parse(storedLinks) : [];
     links.push(newLink);
@@ -40,7 +33,7 @@ function AddLinkDetailsScreen({ route }) {
     setMemo('');
 
     // LinkCardScreen으로 이동
-    navigation.navigate('LinkCard', { link: newLink });
+    navigation.navigate('LinkCard', { id: newLink.id });
   };
 
   const onSave = () => {
