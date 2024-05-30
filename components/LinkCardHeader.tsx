@@ -11,17 +11,20 @@ const LinkCardHeader = ({ title, onSave, onEdit, onRemove, isEditing }) => {
       <Text style={styles.title}>{title}</Text>
       {isEditing ? (
         <View style={styles.buttons}>
-          <TouchableOpacity onPress={onSave}>
-            <Icon name="check" size={24} color="#000" />
-          </TouchableOpacity>
           <TouchableOpacity onPress={onRemove}>
-            <Icon name="delete" size={24} color="#000" style={styles.iconMargin} />
+            <Icon name="delete" size={24} color="#000"/>
+          <TouchableOpacity onPress={onSave}>
+            <Icon name="check" size={24} color="#000" style={styles.iconMargin}  />
+          </TouchableOpacity>
           </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.buttons}>
           <TouchableOpacity onPress={onEdit}>
             <Icon name="edit" size={24} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onSave}>
+            <Icon name="check" size={24} color="#000"  style={styles.iconMargin} />
           </TouchableOpacity>
         </View>
       )}

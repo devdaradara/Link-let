@@ -22,10 +22,10 @@ export type MainTabRouteProp = RouteProp<RootStackParamList, 'MainTab'>;
 
 /** RootStack */
 export type RootStackParamList = {
-  MainTab: MainTabNavigationScreenParams;
+  MainTab: NavigatorScreenParams<MainTabParamList>;
   CategorySelection: undefined;
   AddLinkDetails: { category: string };
   AddCategory: undefined;
-  LinkCard: { link: { id: string; title: string; url: string; category: string; memo: string } };
+  LinkCard: { link: { id: string; title: string; url: string; category: string; memo: string; createdAt: string } };
 };
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;

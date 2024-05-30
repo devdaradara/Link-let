@@ -1,38 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinkCardHeader from '../components/LinkCardHeader';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { RootStackParamList } from '../types';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {format} from 'date-fns';
+import {RootStackParamList, MainTabParamList} from './types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {CompositeNavigationProp} from '@react-navigation/native';
 
-type LinkCardScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LinkCard'>;
+type LinkCardScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<RootStackParamList, 'LinkCard'>,
+  StackNavigationProp<MainTabParamList, 'Home'>
+>;
 
 const LinkCardScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<LinkCardScreenNavigationProp>();
-  const { link } = route.params as { link: { id: string; title: string; url: string; category: string; memo: string } };
+  const {link} = route.params as {
+    link: {
+      id: string;
+      title: string;
+      url: string;
+      category: string;
+      memo: string;
+      createdAt: string;
+    };
+  };
   const [title, setTitle] = useState(link.title);
   const [url, setUrl] = useState(link.url);
   const [memo, setMemo] = useState(link.memo);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    navigation.setOptions({ headerShown: false });
+    navigation.setOptions({headerShown: false});
   }, [navigation]);
 
   const saveLink = async () => {
-    const updatedLink = { ...link, title, url, memo };
+    const updatedLink = {...link, title, url, memo};
     const storedLinks = await AsyncStorage.getItem('links');
     let links = storedLinks ? JSON.parse(storedLinks) : [];
-    links = links.map((l) => (l.id === updatedLink.id ? updatedLink : l));
+    links = links.map(l => (l.id === updatedLink.id ? updatedLink : l));
     await AsyncStorage.setItem('links', JSON.stringify(links));
 
     setIsEditing(false);
-    navigation.navigate('MainTab', { screen: 'Home', params: { refresh: true } });
+    navigation.navigate('MainTab', {screen: 'Home', params: {refresh: true}});
   };
 
   const removeLink = async () => {
@@ -40,20 +54,23 @@ const LinkCardScreen = () => {
       '삭제',
       '정말 삭제하시겠습니까?',
       [
-        { text: '취소', style: 'cancel' },
+        {text: '취소', style: 'cancel'},
         {
           text: '삭제',
           onPress: async () => {
             const storedLinks = await AsyncStorage.getItem('links');
             let links = storedLinks ? JSON.parse(storedLinks) : [];
-            links = links.filter((l) => l.id !== link.id);
+            links = links.filter(l => l.id !== link.id);
             await AsyncStorage.setItem('links', JSON.stringify(links));
-            navigation.navigate('MainTab', { screen: 'Home', params: { refresh: true } });
+            navigation.navigate('MainTab', {
+              screen: 'Home',
+              params: {refresh: true},
+            });
           },
           style: 'destructive',
         },
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
@@ -73,6 +90,12 @@ const LinkCardScreen = () => {
       />
       <View style={styles.content}>
         <View style={styles.field}>
+          <View style={styles.field}>
+            <Text style={styles.label}>생성 시간</Text>
+            <Text style={styles.date}>
+              {format(new Date(link.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+            </Text>
+          </View>
           <Text style={styles.label}>URL</Text>
           <View style={styles.urlContainer}>
             <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
@@ -126,6 +149,10 @@ const styles = StyleSheet.create({
   memoIcon: {
     marginLeft: 8,
     alignSelf: 'flex-start',
+  },
+  date: {
+    fontSize: 16,
+    color: '#888',
   },
 });
 
