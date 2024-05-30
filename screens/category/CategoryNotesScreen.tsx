@@ -38,7 +38,7 @@ const CategoryNotesScreen = () => {
       if (storedLinks) {
         const allLinks = JSON.parse(storedLinks);
         const categoryLinks =
-          category === '전체 보기'
+          category === 'All'
             ? allLinks
             : allLinks.filter(link => link.category === category);
         setNotes(categoryLinks);
@@ -88,7 +88,7 @@ const CategoryNotesScreen = () => {
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL 복사됨', 'URL이 클립보드에 복사되었습니다.');
+    Alert.alert('URL copied', 'URL has been copied to clipboard.');
   };
 
   const handleBack = () => {

@@ -41,7 +41,7 @@ const LinkCardScreen = ({route, navigation}) => {
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL이 복사되었습니다.');
+    Alert.alert('URL copied.');
   };
 
   const handleFlip = () => {
@@ -85,7 +85,7 @@ const LinkCardScreen = ({route, navigation}) => {
   if (!link) {
     return (
       <View style={styles.container}>
-        <Text>링크를 불러오는 중입니다...</Text>
+        <Text>Loading link...</Text>
       </View>
     );
   }

@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    marginBottom: 8,
   },
   settingText: {
     fontSize: 16,

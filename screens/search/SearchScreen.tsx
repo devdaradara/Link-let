@@ -72,7 +72,7 @@ const SearchScreen = () => {
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL 복사됨', 'URL이 클립보드에 복사되었습니다.');
+    Alert.alert('URL copied', 'The URL has been copied to the clipboard.');
   };
 
   const handlePress = (id: string) => {
