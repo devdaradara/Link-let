@@ -6,11 +6,59 @@ import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import SearchScreen from '../search/SearchScreen';
 import CalendarScreen from '../calendar/CalendarScreen';
-import SettingsScreen from '../settings/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
 const MainTab = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarActiveTintColor: '#fc7a1e',
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 60,
+          paddingBottom: 10,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="search" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreenWithFloatingButton}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="home" color={color} size={size} />
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+              <MaterialIcons name="settings" size={24} color="#000" style={{ marginRight: 15 }} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="calendar-today" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const HomeScreenWithFloatingButton = () => {
   const navigation = useNavigation();
 
   const handleAddLink = () => {
@@ -23,50 +71,7 @@ const MainTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          tabBarActiveTintColor: '#fc7a1e',
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            height: 60,
-            paddingBottom: 10,
-          },
-        }}
-      >
-        <Tab.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="search" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="home" color={color} size={size} />
-            ),
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <MaterialIcons name="settings" size={24} color="#000" style={{ marginRight: 15 }} />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Calendar"
-          component={CalendarScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="calendar-today" color={color} size={size} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      <HomeScreen />
       <TouchableOpacity
         style={styles.floatingButton}
         onPress={handleAddLink}
@@ -89,7 +94,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
-    marginBottom: 60,
   },
   floatingButtonIcon: {
     color: '#fff',
