@@ -6,6 +6,8 @@ import WriteHeader from '../../components/header/WriteHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootStackParamList } from '../../navigation/types';
+import { useTheme } from '../../context/ThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function AddLinkDetailsScreen({ route }) {
   const { category } = route.params;
@@ -15,6 +17,9 @@ function AddLinkDetailsScreen({ route }) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const urlRef = useRef<TextInput>(null);
   const memoRef = useRef<TextInput>(null);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+  const { top } = useSafeAreaInsets();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -43,7 +48,8 @@ function AddLinkDetailsScreen({ route }) {
   };
 
   return (
-    <SafeAreaView style={styles.block}>
+    <View style={styles.block}>
+      <View style={[styles.topSection, { height: top }]} />
       <KeyboardAvoidingView
         style={styles.avoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -52,6 +58,7 @@ function AddLinkDetailsScreen({ route }) {
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="URL"
+              placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
               style={styles.textInput}
               returnKeyType="next"
               value={url}
@@ -64,6 +71,7 @@ function AddLinkDetailsScreen({ route }) {
           <View style={styles.memoContainer}>
             <TextInput
               placeholder="Memo"
+              placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
               style={styles.memoInput}
               multiline
               textAlignVertical="top"
@@ -75,14 +83,17 @@ function AddLinkDetailsScreen({ route }) {
           </View>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   block: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#121212' : '#fff',
+  },
+  topSection: {
+    backgroundColor: theme === 'dark' ? '#121212' : '#fff',
   },
   avoidingView: {
     flex: 1,
@@ -95,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: theme === 'dark' ? '#333' : '#ccc',
     marginBottom: 16,
   },
   icon: {
@@ -104,19 +115,19 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     fontSize: 16,
-    color: '#263238',
+    color: theme === 'dark' ? '#fff' : '#263238',
   },
   memoContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: theme === 'dark' ? '#333' : '#ccc',
   },
   memoInput: {
     flex: 1,
     fontSize: 16,
-    color: '#263238',
+    color: theme === 'dark' ? '#fff' : '#263238',
     paddingRight: 8,
     height: '100%',
   },

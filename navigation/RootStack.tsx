@@ -8,16 +8,22 @@ import AddCategoryScreen from '../screens/category/AddCategoryScreen';
 import LinkCardScreen from '../screens/link/LinkCardScreen';
 import CategoryNotesScreen from '../screens/category/CategoryNotesScreen';
 import SettingsScreen from '../screens/settings/SettingsScreen';
+import { useTheme } from '../context/ThemeContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootStack() {
+  const { theme } = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerTitleAlign: 'center',
-        headerTintColor: '#000',
-        headerBackTitleVisible: false, 
+        headerTintColor: theme === 'dark' ? '#fff' : '#000',
+        headerBackTitleVisible: false,
+        headerStyle: {
+          backgroundColor: theme === 'dark' ? '#121212' : '#fff',
+        },
       }}
     >
       <Stack.Screen

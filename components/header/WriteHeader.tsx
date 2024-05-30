@@ -1,11 +1,14 @@
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
-import TransparentCircleButton from '.././TransparentCircleButton';
+import TransparentCircleButton from '../TransparentCircleButton';
 import { RootStackParamList } from '../../navigation/types';
+import { useTheme } from '../../context/ThemeContext';
 
 function WriteHeader({ onSave, title, setTitle }) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const onGoBack = () => {
     navigation.goBack();
@@ -17,12 +20,13 @@ function WriteHeader({ onSave, title, setTitle }) {
         <TransparentCircleButton
           onPress={onGoBack}
           name="arrow-back"
-          color="black"
+          color={theme === 'dark' ? '#fff' : 'black'}
         />
       </View>
       <TextInput
         style={styles.titleInput}
         placeholder="Title"
+        placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
         value={title}
         onChangeText={setTitle}
       />
@@ -37,14 +41,14 @@ function WriteHeader({ onSave, title, setTitle }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   block: {
     height: 65,
     paddingHorizontal: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#121212' : '#fff',
   },
   iconButtonWrapper: {
     width: 32,
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#424242',
+    color: theme === 'dark' ? '#fff' : '#424242',
   },
   buttons: {
     flexDirection: 'row',

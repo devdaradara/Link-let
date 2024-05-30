@@ -5,10 +5,13 @@ import Wallet from '../../components/Wallet';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/types';
 import { NavigationProp } from '@react-navigation/native';
+import { useTheme } from '../../context/ThemeContext';
 
 const HomeScreen = () => {
   const [categories, setCategories] = useState<{ title: string, color: string }[]>([]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const fetchCategories = async () => {
     try {
@@ -73,10 +76,10 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e7e7e7'
+    backgroundColor: theme === 'dark' ? '#333' : '#e7e7e7'
   },
   row: {
     justifyContent: 'space-around',

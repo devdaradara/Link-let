@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '../../context/ThemeContext';
 
 const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -23,7 +27,7 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
           {url}
         </Text>
         <TouchableOpacity onPress={onCopy}>
-          <Icon name="content-copy" size={24} color="#888" />
+          <Icon name="content-copy" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
       </View>
       <Text style={styles.label}>Date</Text>
@@ -32,16 +36,16 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
       <Text style={styles.memo}>{memo}</Text>
       <View style={styles.flipButtonContainer}>
         <TouchableOpacity onPress={onFlip} style={styles.flipButton}>
-          <Icon name="flip" size={24} color="#888" />
+          <Icon name="flip" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#1f1f1f' : '#fff',
     height: 500,
     width: 280,
     padding: 16,
@@ -53,14 +57,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: 'black',
+    color: theme === 'dark' ? '#fff' : 'black',
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 14,
     marginBottom: 6,
-    color: 'black'
+    color: theme === 'dark' ? '#fff' : 'black',
   },
   urlContainer: {
     flexDirection: 'row',
@@ -75,11 +79,11 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 14,
     marginBottom: 14,
-    color: 'black',
+    color: theme === 'dark' ? '#bbb' : 'black',
   },
   memo: {
     fontSize: 14,
-    color: 'black',
+    color: theme === 'dark' ? '#bbb' : 'black',
   },
   flipButtonContainer: {
     flex: 1,

@@ -3,11 +3,15 @@ import { View, TextInput, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingVi
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../../context/ThemeContext';
 
 const AddCategoryScreen = ({ navigation }) => {
   const [categoryName, setCategoryName] = useState('');
   const [color, setColor] = useState('#ffffff');
   const colorInputRef = useRef<TextInput>(null);
+
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const saveCategory = async () => {
     try {
@@ -46,6 +50,7 @@ const AddCategoryScreen = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="category"
+            placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
             value={categoryName}
             onChangeText={setCategoryName}
             returnKeyType="next"
@@ -58,6 +63,7 @@ const AddCategoryScreen = ({ navigation }) => {
             ref={colorInputRef}
             style={styles.input}
             placeholder="#ffffff"
+            placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
             value={color}
             onChangeText={handleColorChange}
           />
@@ -70,10 +76,10 @@ const AddCategoryScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e7e7e7',
+    backgroundColor: theme === 'dark' ? '#121212' : '#e7e7e7',
   },
   avoidingView: {
     flex: 1,
@@ -95,15 +101,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     width: 100,
-    color: 'black',
+    color: theme === 'dark' ? '#ffffff' : 'black',
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: theme === 'dark' ? '#333' : '#ccc',
     borderRadius: 5,
     padding: 8,
     marginLeft: 8,
+    color: theme === 'dark' ? '#e7e7e7' : '#000',
   },
   saveButton: {
     backgroundColor: '#fc7a1e',

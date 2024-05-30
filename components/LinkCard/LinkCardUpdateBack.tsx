@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '../../context/ThemeContext';
 
 const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => {
   const [updatedTitle, setUpdatedTitle] = useState(title);
   const [updatedUrl, setUpdatedUrl] = useState(url);
   const [updatedMemo, setUpdatedMemo] = useState(memo);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.card}>
@@ -14,6 +17,7 @@ const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => 
         value={updatedTitle}
         onChangeText={setUpdatedTitle}
         placeholder="Title"
+        placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
       />
       <Text style={styles.label}>URL</Text>
       <TextInput
@@ -21,6 +25,7 @@ const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => 
         value={updatedUrl}
         onChangeText={setUpdatedUrl}
         placeholder="URL"
+        placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
       />
       <Text style={styles.label}>Date</Text>
       <Text style={styles.date}>{createdAt}</Text>
@@ -30,11 +35,12 @@ const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => 
         value={updatedMemo}
         onChangeText={setUpdatedMemo}
         placeholder="Memo"
+        placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
         multiline
       />
       <View style={styles.flipButtonContainer}>
         <TouchableOpacity onPress={onFlip} style={styles.flipButton}>
-          <Icon name="flip" size={24} color="#888" />
+          <Icon name="flip" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => onSave(updatedTitle, updatedUrl, updatedMemo)} style={styles.saveButton}>
@@ -44,9 +50,9 @@ const LinkCardUpdateBack = ({ title, url, createdAt, memo, onFlip, onSave }) => 
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#1f1f1f' : '#fff',
     height: 500,
     width: 280,
     padding: 16,
@@ -56,21 +62,22 @@ const styles = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: theme === 'dark' ? '#555' : '#ccc',
     marginBottom: 14,
     fontSize: 16,
+    color: theme === 'dark' ? '#fff' : '#000',
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 14,
     marginBottom: 6,
-    color: 'black',
+    color: theme === 'dark' ? '#fff' : '#000',
   },
   date: {
     fontSize: 14,
     marginBottom: 14,
-    color: 'black',
+    color: theme === 'dark' ? '#fff' : '#000',
   },
   memoInput: {
     height: 100,

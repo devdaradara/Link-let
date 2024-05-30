@@ -6,11 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import SearchScreen from '../search/SearchScreen';
 import CalendarScreen from '../calendar/CalendarScreen';
+import { useTheme } from '../../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 
 const HomeScreenWithFloatingButton = () => {
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const handleAddLink = () => {
     navigation.navigate('CategorySelection', {
@@ -35,21 +38,25 @@ const HomeScreenWithFloatingButton = () => {
 
 const MainTab = () => {
   const navigation = useNavigation();
-  
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
     <>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
-          tabBarActiveTintColor: '#fc7a1e',
+          tabBarActiveTintColor: theme === 'dark' ? '#fc7a1e' : '#fc7a1e',
+          tabBarInactiveTintColor: theme === 'dark' ? '#ccc' : '#000',
           tabBarShowLabel: false,
           tabBarStyle: {
             height: 60,
             paddingBottom: 10,
+            backgroundColor: theme === 'dark' ? '#121212' : '#fff',
           },
           headerTitleAlign: 'center',
-          headerTintColor: '#000',
-          headerTitleStyle: { fontWeight: 'bold' },
+          headerTintColor: theme === 'dark' ? '#fff' : '#000',
+          headerTitleStyle: { fontWeight: 'bold', color: theme === 'dark' ? '#fff' : '#000' },
         }}
       >
         <Tab.Screen
@@ -70,7 +77,7 @@ const MainTab = () => {
             ),
             headerRight: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <MaterialIcons name="settings" size={24} color="#000" style={{ marginRight: 15 }} />
+                <MaterialIcons name="settings" size={24} color={theme === 'dark' ? '#fff' : '#000'} style={{ marginRight: 15 }} />
               </TouchableOpacity>
             ),
           }}
@@ -89,7 +96,7 @@ const MainTab = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   floatingButton: {
     position: 'absolute',
     bottom: 30,
@@ -97,7 +104,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#fc7a1e',
+    backgroundColor: theme === 'dark' ? '#fc7a1e' : '#fc7a1e',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,

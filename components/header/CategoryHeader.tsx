@@ -42,7 +42,7 @@ const getStyles = (theme: string) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: theme === 'dark' ? '#333' : '#fff',
+      backgroundColor: theme === 'dark' ? '#000' : '#fff',
       padding: 16,
     },
     title: {

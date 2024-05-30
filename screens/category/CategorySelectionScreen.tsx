@@ -3,10 +3,13 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Wallet from '../../components/Wallet';
+import { useTheme } from '../../context/ThemeContext';
 
 const CategorySelectionScreen = () => {
   const [categories, setCategories] = useState<{ name: string, color: string }[]>([]);
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const fetchCategories = async () => {
     try {
@@ -72,10 +75,10 @@ const CategorySelectionScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e7e7e7',
+    backgroundColor: theme === 'dark' ? '#333' : '#e7e7e7',
   },
   row: {
     justifyContent: 'space-around',
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   item: {
-    backgroundColor: '#ccc',
+    backgroundColor: theme === 'dark' ? '#333' : '#ccc',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,

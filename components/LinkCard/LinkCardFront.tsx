@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '../../context/ThemeContext';
 
-// 썸네일 URL을 결정하는 함수
+// Function to determine the thumbnail URL
 const getThumbnailUrl = (url) => {
   const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
   const matches = youtubeRegex.exec(url);
@@ -15,6 +16,9 @@ const getThumbnailUrl = (url) => {
 };
 
 const LinkCardFront = ({ title, url, onCopy, onFlip }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   const thumbnailUrl = getThumbnailUrl(url);
 
   return (
@@ -29,19 +33,19 @@ const LinkCardFront = ({ title, url, onCopy, onFlip }) => {
       </Text>
       <View style={styles.actions}>
         <TouchableOpacity onPress={onCopy}>
-          <Icon name="content-copy" size={24} color="#888" />
+          <Icon name="content-copy" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={onFlip}>
-          <Icon name="flip" size={24} color="#888" />
+          <Icon name="flip" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#1f1f1f' : '#fff',
     height: 500,
     width: 280,
     padding: 16,
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
-    color: 'black',
+    color: theme === 'dark' ? '#fff' : 'black',
   },
   url: {
     fontSize: 16,

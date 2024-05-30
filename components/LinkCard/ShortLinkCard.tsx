@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '../../context/ThemeContext';
 
 const getThumbnailUrl = (url) => {
   const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
@@ -14,6 +15,9 @@ const getThumbnailUrl = (url) => {
 };
 
 const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress, isEditing, onRemove }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   const thumbnailUrl = getThumbnailUrl(url);
 
   const getRelativeTime = (date) => {
@@ -35,13 +39,13 @@ const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress, isEditing, onRe
         <View style={styles.header}>
           <Text style={styles.title}>{title}</Text>
         </View>
-          <Text style={styles.date}>{getRelativeTime(createdAt)}</Text>
+        <Text style={styles.date}>{getRelativeTime(createdAt)}</Text>
         <View style={styles.urlContainer}>
           <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
             {url}
           </Text>
           <TouchableOpacity onPress={onCopy}>
-            <Icon name="content-copy" size={20} color="#888" />
+            <Icon name="content-copy" size={20} color={theme === 'dark' ? '#ccc' : '#888'} />
           </TouchableOpacity>
         </View>
         {isEditing && (
@@ -54,10 +58,10 @@ const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress, isEditing, onRe
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#1f1f1f' : '#fff',
     padding: 10,
     marginVertical: 12,
     borderRadius: 8,
@@ -84,11 +88,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'black',
+    color: theme === 'dark' ? '#fff' : 'black',
   },
   date: {
     fontSize: 12,
-    color: '#888',
+    color: theme === 'dark' ? '#bbb' : '#888',
   },
   urlContainer: {
     flexDirection: 'row',
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   url: {
     flex: 1,
     fontSize: 14,
-    color: '#485696',
+    color: theme === 'dark' ? '#bbb' : '#485696',
   },
   removeButton: {
     position: 'absolute',

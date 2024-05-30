@@ -23,7 +23,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({ searchQuery, setSearchQuery
         onChangeText={setSearchQuery}
       />
       <TouchableOpacity onPress={onSearch}>
-        <Icon name="search" size={24} color={theme === 'dark' ? '#fff' : '#000'} />
+        <Icon name="search" size={24} color={'#fc7a1e'} />
       </TouchableOpacity>
     </View>
   );
@@ -36,7 +36,7 @@ const getStyles = (theme: string) =>
       alignItems: 'center',
       paddingHorizontal: 16,
       paddingVertical: 10,
-      backgroundColor: theme === 'dark' ? '#333' : '#fff',
+      backgroundColor: theme === 'dark' ? '#000' : '#fff',
     },
     searchInput: {
       flex: 1,

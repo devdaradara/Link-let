@@ -6,6 +6,7 @@ import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import SearchHeader from '../../components/header/SearchHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useTheme } from '../../context/ThemeContext';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,6 +85,8 @@ const SearchScreen = () => {
   }, [navigation]);
 
   const {top} = useSafeAreaInsets();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
@@ -114,13 +117,14 @@ const SearchScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+
+const createStyles = (theme) => StyleSheet.create({
   topWhite: {
-    backgroundColor: '#fff',
+    backgroundColor: theme === 'dark' ? '#000' : '#fff',
   },
   container: {
     flex: 1,
-    backgroundColor: '#e7e7e7',
+    backgroundColor: theme === 'dark' ? '#333' : '#e7e7e7',
   },
   contentContainer: {
     paddingBottom: 20,

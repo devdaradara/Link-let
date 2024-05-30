@@ -6,6 +6,7 @@ import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { format } from 'date-fns';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../../context/ThemeContext';
 
 interface Link {
   id: string;
@@ -21,6 +22,8 @@ const CalendarScreen = () => {
   const [logs, setLogs] = useState<Link[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<Link[]>([]);
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const fetchLinks = async () => {
     try {
@@ -70,12 +73,12 @@ const CalendarScreen = () => {
         markedDates={markedDates}
         onDayPress={(day) => setSelectedDate(day.dateString)}
         theme={{
-          calendarBackground: '#ffffff',
-          textSectionTitleColor: '#b6c1cd',
+          calendarBackground: theme === 'dark' ? '#121212' : '#ffffff',
+          textSectionTitleColor: theme === 'dark' ? '#b6c1cd' : '#b6c1cd',
           selectedDayBackgroundColor: '#fc7a1e',
           selectedDayTextColor: '#ffffff',
           todayTextColor: '#fc7a1e',
-          dayTextColor: '#2d4150',
+          dayTextColor: theme === 'dark' ? '#ffffff' : '#2d4150',
           textDisabledColor: '#d9e1e8',
           dotColor: '#fc7a1e',
           selectedDotColor: '#ffffff',
@@ -103,10 +106,10 @@ const CalendarScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e7e7e7',
+    backgroundColor: theme === 'dark' ? '#333' : '#e7e7e7',
   },
   contentContainer: {
     paddingBottom: 20,
