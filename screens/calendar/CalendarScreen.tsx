@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { format } from 'date-fns';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../context/ThemeContext';
 
 interface Link {
@@ -46,6 +46,12 @@ const CalendarScreen = () => {
   useEffect(() => {
     fetchLinks();
   }, [selectedDate]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchLinks();
+    }, [])
+  );
 
   const markedDates = useMemo(() => {
     const dates = logs.reduce((acc, current) => {
