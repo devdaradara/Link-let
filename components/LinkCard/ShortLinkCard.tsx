@@ -37,7 +37,9 @@ const ShortLinkCard = ({ title, url, createdAt, onCopy, onPress, isEditing, onRe
       <Image source={{ uri: thumbnailUrl }} style={styles.thumbnail} />
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+            {title}
+          </Text>
         </View>
         <Text style={styles.date}>{getRelativeTime(createdAt)}</Text>
         <View style={styles.urlContainer}>
@@ -89,6 +91,8 @@ const createStyles = (theme) => StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: theme === 'dark' ? '#fff' : 'black',
+    numberOfLines: 1,
+    ellipsizeMode: 'tail',
   },
   date: {
     fontSize: 12,
