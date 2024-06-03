@@ -7,6 +7,7 @@ import AddLinkDetailsScreen from '../screens/link/AddLinkDetailsScreen';
 import AddCategoryScreen from '../screens/category/AddCategoryScreen';
 import LinkCardScreen from '../screens/link/LinkCardScreen';
 import CategoryNotesScreen from '../screens/category/CategoryNotesScreen';
+import EditCategoryScreen from '../screens/category/EditCategoryScreen';
 import SettingsScreen from '../screens/settings/SettingsScreen';
 import { useTheme } from '../context/ThemeContext';
 
@@ -55,6 +56,11 @@ function RootStack() {
         name="CategoryNotes"
         component={CategoryNotesScreen}
         options={{ title: 'Category Notes' }}
+      />
+      <Stack.Screen
+        name="EditCategory"
+        component={EditCategoryScreen}
+        options={{ title: 'Edit Category' }}
       />
       <Stack.Screen
         name="Settings"

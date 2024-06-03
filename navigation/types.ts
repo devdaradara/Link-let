@@ -28,5 +28,7 @@ export type RootStackParamList = {
   AddCategory: undefined;
   LinkCard: { id: string };
   CategoryNotes: { category: string };
+  EditCategory: { categoryId: string, categoryName: string, categoryColor: string }; 
+  Settings: undefined;
 };
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;

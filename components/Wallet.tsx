@@ -1,19 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface WalletProps {
   title: string;
   color: string;
   onPress: () => void;
+  onDelete: () => void;
+  editMode: boolean;
+  onEdit: () => void;
 }
 
-const Wallet: React.FC<WalletProps> = ({ title, color, onPress }) => {
+const Wallet = ({ title, color, onPress, onDelete, editMode, onEdit }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.tab}>
         <Text style={styles.tabTitle}>{title}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: color }]}>
+      {editMode && (
+        <View style={styles.editButtons}>
+          <TouchableOpacity onPress={onEdit} style={styles.editButton}>
+            <Icon name="edit" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
+            <Icon name="delete" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      )}
         {title === 'Add' ? (
           <Text style={styles.addButtonText}>+</Text>
         ) : (
@@ -70,6 +84,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#505050',
   },
+  editButtons: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    flexDirection: 'row',
+  },
+  editButton: {
+    marginRight: 10,
+  },
+  deleteButton: {},
 });
 
 export default Wallet;

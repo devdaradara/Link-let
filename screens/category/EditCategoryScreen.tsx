@@ -4,28 +4,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
 
-const AddCategoryScreen = ({ navigation }) => {
-  const [categoryName, setCategoryName] = useState('');
-  const [color, setColor] = useState('#ffffff');
+const EditCategoryScreen = ({ route }) => {
+  const { categoryId, categoryName: initialCategoryName, categoryColor: initialCategoryColor } = route.params;
+  const [categoryName, setCategoryName] = useState(initialCategoryName);
+  const [color, setColor] = useState(initialCategoryColor);
   const colorInputRef = useRef<TextInput>(null);
 
   const { theme } = useTheme();
   const styles = createStyles(theme);
+  const navigation = useNavigation();
 
   const saveCategory = async () => {
     try {
-      const newCategory = { name: categoryName, color, createdAt: new Date().toISOString() };
       const storedCategories = await AsyncStorage.getItem('categories');
       const categories = storedCategories ? JSON.parse(storedCategories) : [];
-      const updatedCategories = [...categories, newCategory];
+      const updatedCategories = categories.map(cat =>
+        cat.id === categoryId ? { ...cat, name: categoryName, color } : cat
+      );
 
       await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
 
-      setCategoryName('');
-      setColor('#ffffff');
-
-      navigation.navigate('CategorySelection');
+      // Navigate back to the MainTab and select the Home tab
+      navigation.navigate('MainTab', { screen: 'Home' });
     } catch (error) {
       console.error('Error saving category: ', error);
     }
@@ -126,4 +128,4 @@ const createStyles = (theme) => StyleSheet.create({
   },
 });
 
-export default AddCategoryScreen;
+export default EditCategoryScreen;
