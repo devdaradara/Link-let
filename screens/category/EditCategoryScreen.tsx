@@ -5,11 +5,13 @@ import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+import ColorPickerModal from '../../components/ColorPickerModal';
 
 const EditCategoryScreen = ({ route }) => {
   const { categoryId, categoryName: initialCategoryName, categoryColor: initialCategoryColor } = route.params;
   const [categoryName, setCategoryName] = useState(initialCategoryName);
   const [color, setColor] = useState(initialCategoryColor);
+  const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
   const colorInputRef = useRef<TextInput>(null);
 
   const { theme } = useTheme();
@@ -26,16 +28,11 @@ const EditCategoryScreen = ({ route }) => {
 
       await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
 
-      // Navigate back to the MainTab and select the Home tab
+     
       navigation.navigate('MainTab', { screen: 'Home' });
     } catch (error) {
       console.error('Error saving category: ', error);
     }
-  };
-
-  const handleColorChange = (text) => {
-    const colorText = text.startsWith('#') ? text : `#${text}`;
-    setColor(colorText);
   };
 
   return (
@@ -61,18 +58,22 @@ const EditCategoryScreen = ({ route }) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>COLOR</Text>
-          <TextInput
-            ref={colorInputRef}
-            style={styles.input}
-            placeholder="#ffffff"
-            placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
-            value={color}
-            onChangeText={handleColorChange}
-          />
+          <TouchableOpacity onPress={() => setIsColorPickerVisible(true)}>
+            <View style={[styles.colorButton, { backgroundColor: color }]} />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.saveButton} onPress={saveCategory}>
           <Text style={styles.saveButtonText}>SAVE</Text>
         </TouchableOpacity>
+        <ColorPickerModal
+          visible={isColorPickerVisible}
+          onClose={() => setIsColorPickerVisible(false)}
+          selectedColor={color}
+          onSelectColor={(color) => {
+            setColor(color);
+            setIsColorPickerVisible(false);
+          }}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -94,25 +95,34 @@ const createStyles = (theme) => StyleSheet.create({
     marginBottom: 40,
   },
   inputContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
     width: '80%',
   },
   label: {
-    fontSize: 16,
+    fontSize: 18, 
     fontWeight: 'bold',
-    width: 100,
+    textAlign: 'center', 
     color: theme === 'dark' ? '#ffffff' : 'black',
+    marginBottom: 8,
   },
   input: {
-    flex: 1,
+    width: '80%',
     borderWidth: 1,
     borderColor: theme === 'dark' ? '#333' : '#ccc',
     borderRadius: 5,
     padding: 8,
-    marginLeft: 8,
     color: theme === 'dark' ? '#e7e7e7' : '#000',
+    textAlign: 'center', 
+  },
+  colorButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginTop: 10,
+    alignSelf: 'center',
   },
   saveButton: {
     backgroundColor: '#fc7a1e',

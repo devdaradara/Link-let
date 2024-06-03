@@ -79,7 +79,7 @@ const HomeScreen = () => {
   };
 
   const sortCategories = (categories, criteria) => {
-    const sortedCategories = categories.slice(1); // Exclude the 'All' category for sorting
+    const sortedCategories = categories.slice(1);
     switch (criteria) {
       case 'latest':
         sortedCategories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -96,11 +96,11 @@ const HomeScreen = () => {
       default:
         break;
     }
-    return [categories[0], ...sortedCategories]; // Add 'All' back to the front
+    return [categories[0], ...sortedCategories];
   };
 
   const formatData = (data, numColumns) => {
-    const formattedData = data.filter(item => item); // Remove any undefined or null items
+    const formattedData = data.filter(item => item);
     const numberOfFullRows = Math.floor(formattedData.length / numColumns);
     let numberOfElementsLastRow = formattedData.length - (numberOfFullRows * numColumns);
 
