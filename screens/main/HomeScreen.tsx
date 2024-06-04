@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Wallet from '../../components/Wallet';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -7,13 +7,16 @@ import { RootStackParamList } from '../../navigation/types';
 import { NavigationProp } from '@react-navigation/native';
 import { useTheme } from '../../context/ThemeContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import CustomAlert from '../../components/common/CustomAlert';
 import DropdownFilter from '../../components/DropdownFilter';
 
-const HomeScreen = () => {
+const HomeScreen: React.FC = () => {
   const [categories, setCategories] = useState<{ title: string, color: string, createdAt: string, id: string }[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [sortCriteria, setSortCriteria] = useState('latest');
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [currentCategoryId, setCurrentCategoryId] = useState<string | null>(null);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
   const styles = createStyles(theme);
@@ -22,19 +25,19 @@ const HomeScreen = () => {
     try {
       const storedCategories = await AsyncStorage.getItem('categories');
       if (storedCategories) {
-        const parsedCategories = JSON.parse(storedCategories).map(category => ({
+        const parsedCategories = JSON.parse(storedCategories).map((category: any) => ({
           title: category.name,
           color: category.color,
           createdAt: category.createdAt,
           id: category.id,
         }));
-        setCategories([{ title: 'All', color: '#f9c784', createdAt: new Date().toISOString(), id: 'all' }, ...parsedCategories]);
+        setCategories([{ title: '전체', color: '#f9c784', createdAt: new Date().toISOString(), id: 'all' }, ...parsedCategories]);
       } else {
-        console.log("No categories found in storage.");
-        setCategories([{ title: 'All', color: '#f9c784', createdAt: new Date().toISOString(), id: 'all' }]);
+        console.log("저장된 카테고리가 없습니다.");
+        setCategories([{ title: '전체', color: '#f9c784', createdAt: new Date().toISOString(), id: 'all' }]);
       }
     } catch (error) {
-      console.error("Error fetching categories: ", error);
+      console.error("카테고리 불러오기 오류: ", error);
     }
   };
 
@@ -48,44 +51,36 @@ const HomeScreen = () => {
     navigation.navigate('CategoryNotes', { category });
   };
 
-  const handleDeleteCategory = async (categoryId: string) => {
-    Alert.alert(
-      'Delete Category',
-      `Are you sure you want to delete this category and all its contents?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'Delete',
-          onPress: async () => {
-            try {
-              const storedCategories = await AsyncStorage.getItem('categories');
-              if (storedCategories) {
-                const parsedCategories = JSON.parse(storedCategories);
-                const updatedCategories = parsedCategories.filter(cat => cat.id !== categoryId);
-                await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
-                fetchCategories();
-              }
-            } catch (error) {
-              console.error('Error deleting category: ', error);
-            }
-          },
-          style: 'destructive'
-        }
-      ]
-    );
+  const handleDeleteCategory = async () => {
+    if (!currentCategoryId) return;
+
+    try {
+      const storedCategories = await AsyncStorage.getItem('categories');
+      if (storedCategories) {
+        const parsedCategories = JSON.parse(storedCategories);
+        const updatedCategories = parsedCategories.filter((cat: any) => cat.id !== currentCategoryId);
+        await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
+        fetchCategories();
+      }
+    } catch (error) {
+      console.error('카테고리 삭제 오류: ', error);
+    }
+    setIsAlertVisible(false);
   };
 
-  const sortCategories = (categories, criteria) => {
+  const showDeleteAlert = (categoryId: string) => {
+    setCurrentCategoryId(categoryId);
+    setIsAlertVisible(true);
+  };
+
+  const sortCategories = (categories: any[], criteria: string) => {
     const sortedCategories = categories.slice(1);
     switch (criteria) {
       case 'latest':
-        sortedCategories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        sortedCategories.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
       case 'oldest':
-        sortedCategories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        sortedCategories.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         break;
       case 'asc':
         sortedCategories.sort((a, b) => a.title.localeCompare(b.title));
@@ -99,7 +94,7 @@ const HomeScreen = () => {
     return [categories[0], ...sortedCategories];
   };
 
-  const formatData = (data, numColumns) => {
+  const formatData = (data: any[], numColumns: number) => {
     const formattedData = data.filter(item => item);
     const numberOfFullRows = Math.floor(formattedData.length / numColumns);
     let numberOfElementsLastRow = formattedData.length - (numberOfFullRows * numColumns);
@@ -142,7 +137,7 @@ const HomeScreen = () => {
               title={item.title}
               color={item.color}
               onPress={() => handleWalletPress(item.title)}
-              onDelete={() => handleDeleteCategory(item.id)}
+              onDelete={() => showDeleteAlert(item.id)}
               editMode={editMode}
               onEdit={() => handleEditCategory(item.id, item.title, item.color)}
             />
@@ -158,12 +153,20 @@ const HomeScreen = () => {
           setSortCriteria(filter);
           setIsFilterModalVisible(false);
         }}
+        onClose={() => setIsFilterModalVisible(false)}
+      />
+      <CustomAlert
+        visible={isAlertVisible}
+        type="failed"
+        title="카테고리 삭제"
+        message="이 카테고리와 모든 내용을 삭제하시겠습니까?"
+        onConfirm={handleDeleteCategory}
       />
     </View>
   );
 };
 
-const createStyles = (theme) => StyleSheet.create({
+const createStyles = (theme: string) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme === 'dark' ? '#333' : '#e7e7e7'
