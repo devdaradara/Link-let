@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, BackHandler, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import SearchScreen from '../search/SearchScreen';
@@ -40,6 +40,30 @@ const MainTab = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const styles = createStyles(theme);
+
+  useEffect(() => {
+    const backAction = () => {
+      if (navigation.isFocused()) {
+        Alert.alert("종료 확인", "앱을 종료하시겠습니까?", [
+          {
+            text: "취소",
+            onPress: () => null,
+            style: "cancel"
+          },
+          { text: "확인", onPress: () => BackHandler.exitApp() }
+        ]);
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
 
   return (
     <>

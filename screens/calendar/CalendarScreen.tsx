@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Alert } from 'react-native';
+import { View, StyleSheet, FlatList, Alert, BackHandler } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
@@ -53,6 +53,20 @@ const CalendarScreen = () => {
     }, [])
   );
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   const markedDates = useMemo(() => {
     const dates = logs.reduce((acc, current) => {
       const formattedDate = format(new Date(current.createdAt), 'yyyy-MM-dd');
@@ -104,6 +118,8 @@ const CalendarScreen = () => {
             createdAt={item.createdAt}
             onCopy={() => handleCopy(item.url)}
             onPress={() => handlePress(item.id)}
+            isEditing={false}
+            onRemove={() => {}}
           />
         )}
         contentContainerStyle={styles.contentContainer}
