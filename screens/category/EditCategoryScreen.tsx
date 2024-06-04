@@ -5,7 +5,7 @@ import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
-import ColorPickerModal from '../../components/ColorPickerModal';
+import ColorPickerModal from '../../components/modal/ColorPickerModal';
 
 const EditCategoryScreen = ({ route }) => {
   const { categoryId, categoryName: initialCategoryName, categoryColor: initialCategoryColor } = route.params;

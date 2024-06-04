@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
-import ColorPickerModal from '../../components/ColorPickerModal';
+import ColorPickerModal from '../../components/modal/ColorPickerModal';
 
 const AddCategoryScreen = ({ navigation }) => {
   const [categoryName, setCategoryName] = useState('');
