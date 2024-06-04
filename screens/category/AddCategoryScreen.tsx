@@ -5,8 +5,22 @@ import WalletPreview from '../../components/WalletPreview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
 import ColorPickerModal from '../../components/modal/ColorPickerModal';
+import uuid from 'react-native-uuid';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { MainTabParamList, RootStackParamList } from '../../navigation/types';
 
-const AddCategoryScreen = ({ navigation }) => {
+type AddCategoryScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabParamList, 'Home'>,
+  NativeStackNavigationProp<RootStackParamList, 'AddCategory'>
+>;
+
+type Props = {
+  navigation: AddCategoryScreenNavigationProp;
+};
+
+const AddCategoryScreen: React.FC<Props> = ({ navigation }) => {
   const [categoryName, setCategoryName] = useState('');
   const [color, setColor] = useState('#ffffff');
   const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
@@ -17,7 +31,7 @@ const AddCategoryScreen = ({ navigation }) => {
 
   const saveCategory = async () => {
     try {
-      const newCategory = { name: categoryName, color, createdAt: new Date().toISOString() };
+      const newCategory = { id: uuid.v4(), name: categoryName, color, createdAt: new Date().toISOString() };
       const storedCategories = await AsyncStorage.getItem('categories');
       const categories = storedCategories ? JSON.parse(storedCategories) : [];
       const updatedCategories = [...categories, newCategory];
@@ -27,7 +41,7 @@ const AddCategoryScreen = ({ navigation }) => {
       setCategoryName('');
       setColor('#ffffff');
 
-      navigation.navigate('CategorySelection');
+      navigation.goBack();
     } catch (error) {
       console.error('Error saving category: ', error);
     }
