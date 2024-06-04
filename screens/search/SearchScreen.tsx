@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, FlatList, StyleSheet, Alert} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import ShortLinkCard from '../../components/LinkCard/ShortLinkCard';
@@ -7,6 +7,7 @@ import SearchHeader from '../../components/header/SearchHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import { useTheme } from '../../context/ThemeContext';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,6 +31,9 @@ const SearchScreen = () => {
       createdAt: string;
     }[]
   >([]);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
   const navigation = useNavigation();
 
   const fetchLinks = async () => {
@@ -73,11 +77,16 @@ const SearchScreen = () => {
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL copied', 'The URL has been copied to the clipboard.');
+    setAlertMessage('URL이 클립보드에 복사되었습니다.');
+    setIsAlertVisible(true);
   };
 
   const handlePress = (id: string) => {
     navigation.navigate('LinkCard', {id});
+  };
+
+  const handleCancelAlert = () => {
+    setIsAlertVisible(false);
   };
 
   useEffect(() => {
@@ -112,6 +121,15 @@ const SearchScreen = () => {
           />
         )}
         contentContainerStyle={styles.contentContainer}
+      />
+      <CustomAlert
+        visible={isAlertVisible}
+        type="info"
+        title="알림"
+        message={alertMessage}
+        onConfirm={handleCancelAlert}
+        confirmText="확인"
+        onCancel={handleCancelAlert}
       />
     </View>
   );

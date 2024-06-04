@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useTheme} from '../../context/ThemeContext';
-import {useNavigation} from '@react-navigation/native';
+import { useTheme } from '../../context/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
 
 interface LinkCardHeaderProps {
   title: string;
@@ -19,7 +19,7 @@ const LinkCardHeader: React.FC<LinkCardHeaderProps> = ({
   onSave,
   isEditing,
 }) => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
 

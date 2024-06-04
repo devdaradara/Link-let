@@ -28,10 +28,9 @@ const EditCategoryScreen = ({ route }) => {
 
       await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
 
-     
       navigation.navigate('MainTab', { screen: 'Home' });
     } catch (error) {
-      console.error('Error saving category: ', error);
+      console.error('카테고리 저장 중 오류 발생: ', error);
     }
   };
 

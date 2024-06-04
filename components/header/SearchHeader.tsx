@@ -17,7 +17,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({ searchQuery, setSearchQuery
     <View style={styles.header}>
       <TextInput
         style={styles.searchInput}
-        placeholder="Search..."
+        placeholder="검색..."
         placeholderTextColor={theme === 'dark' ? '#aaa' : '#555'}
         value={searchQuery}
         onChangeText={setSearchQuery}

@@ -20,7 +20,10 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
+      <View style={styles.titleDate}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.date}>{formatDate(createdAt)}</Text>
+      </View>
       <Text style={styles.label}>URL</Text>
       <View style={styles.urlContainer}>
         <Text style={styles.url} numberOfLines={1} ellipsizeMode="tail">
@@ -30,8 +33,6 @@ const LinkCardBack = ({ title, url, createdAt, memo, onFlip, onCopy }) => {
           <Icon name="content-copy" size={24} color={theme === 'dark' ? '#ccc' : '#888'} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.label}>Date</Text>
-      <Text style={styles.date}>{formatDate(createdAt)}</Text>
       <Text style={styles.label}>Memo</Text>
       <Text style={styles.memo}>{memo}</Text>
       <View style={styles.flipButtonContainer}>
@@ -53,11 +54,21 @@ const createStyles = (theme) => StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
   },
+  titleDate: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 15,
     color: theme === 'dark' ? '#fff' : 'black',
+  },
+  date: {
+    marginLeft: 'auto',
+    marginTop: 10,
+    fontSize: 14,
+    color: theme === 'dark' ? '#bbb' : 'black',
   },
   label: {
     fontSize: 18,
@@ -75,11 +86,6 @@ const createStyles = (theme) => StyleSheet.create({
     fontSize: 16,
     color: '#485696',
     flex: 1,
-  },
-  date: {
-    fontSize: 14,
-    marginBottom: 14,
-    color: theme === 'dark' ? '#bbb' : 'black',
   },
   memo: {
     fontSize: 14,

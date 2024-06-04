@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, TextInput, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import WriteHeader from '../../components/header/WriteHeader';
@@ -8,12 +8,15 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootStackParamList } from '../../navigation/types';
 import { useTheme } from '../../context/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CustomAlert from '../../components/common/CustomAlert';
 
 function AddLinkDetailsScreen({ route }) {
   const { category } = route.params;
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [memo, setMemo] = useState('');
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const urlRef = useRef<TextInput>(null);
   const memoRef = useRef<TextInput>(null);
@@ -41,10 +44,15 @@ function AddLinkDetailsScreen({ route }) {
 
   const onSave = () => {
     if (!title || !url) {
-      Alert.alert('Error', 'Title and URL cannot be empty.');
+      setAlertMessage('제목과 URL을 입력해주세요.');
+      setIsAlertVisible(true);
       return;
     }
     saveLink();
+  };
+
+  const handleCancelAlert = () => {
+    setIsAlertVisible(false);
   };
 
   return (
@@ -70,7 +78,7 @@ function AddLinkDetailsScreen({ route }) {
           </View>
           <View style={styles.memoContainer}>
             <TextInput
-              placeholder="Memo"
+              placeholder="메모를 입력하세요."
               placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
               style={styles.memoInput}
               multiline
@@ -83,6 +91,15 @@ function AddLinkDetailsScreen({ route }) {
           </View>
         </View>
       </KeyboardAvoidingView>
+      <CustomAlert
+        visible={isAlertVisible}
+        type="warning"
+        title="입력 오류"
+        message={alertMessage}
+        onConfirm={handleCancelAlert}
+        confirmText="확인"
+        onCancel={handleCancelAlert}
+      />
     </View>
   );
 }

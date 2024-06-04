@@ -17,10 +17,10 @@ const CategorySelectionScreen = () => {
       if (storedCategories) {
         setCategories(JSON.parse(storedCategories));
       } else {
-        console.log("No categories found in storage.");
+        console.log("저장된 카테고리가 없습니다.");
       }
     } catch (error) {
-      console.error("Error fetching categories: ", error);
+      console.log("카테고리 불러오기 오류: ", error);
     }
   };
 
@@ -47,13 +47,13 @@ const CategorySelectionScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={formatData([{ name: 'Add', color: '#f9c784' }, ...categories], 2)}
+        data={formatData([{ name: '추가', color: '#f9c784' }, ...categories], 2)}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => {
           if (item.name.includes('blank')) {
             return <View style={[styles.item, styles.itemInvisible]} />;
           }
-          return item.name === 'Add' ? (
+          return item.name === '추가' ? (
             <Wallet
               title={item.name}
               color={item.color}

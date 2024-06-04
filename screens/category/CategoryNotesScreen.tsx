@@ -15,6 +15,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomAlert from '../../components/common/CustomAlert';
 
 type CategoryNotesRouteProp = RouteProp<RootStackParamList, 'CategoryNotes'>;
 
@@ -28,6 +29,8 @@ const CategoryNotesScreen = () => {
     {id: string; title: string; url: string; memo: string; createdAt: string}[]
   >([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [currentNoteId, setCurrentNoteId] = useState<string | null>(null);
   const route = useRoute<CategoryNotesRouteProp>();
   const navigation = useNavigation<CategoryNotesNavigationProp>();
   const {category} = route.params;
@@ -38,13 +41,13 @@ const CategoryNotesScreen = () => {
       if (storedLinks) {
         const allLinks = JSON.parse(storedLinks);
         const categoryLinks =
-          category === 'All'
+          category === '전체'
             ? allLinks
             : allLinks.filter(link => link.category === category);
         setNotes(categoryLinks);
       }
     } catch (error) {
-      console.error('Error fetching links: ', error);
+      console.error('링크 불러오기 오류: ', error);
     }
   };
 
@@ -63,32 +66,29 @@ const CategoryNotesScreen = () => {
     setIsEditing(true);
   };
 
-  const handleRemove = async (id: string) => {
-    Alert.alert(
-      'Delete',
-      'Are you sure you want to delete?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          onPress: async () => {
-            const storedLinks = await AsyncStorage.getItem('links');
-            let links = storedLinks ? JSON.parse(storedLinks) : [];
-            links = links.filter(link => link.id !== id);
-            await AsyncStorage.setItem('links', JSON.stringify(links));
-            setNotes(links.filter(link => link.category === category));
-            fetchNotes();
-          },
-          style: 'destructive',
-        },
-      ],
-      {cancelable: true},
-    );
+  const handleRemove = async () => {
+    if (!currentNoteId) return;
+    try {
+      const storedLinks = await AsyncStorage.getItem('links');
+      let links = storedLinks ? JSON.parse(storedLinks) : [];
+      links = links.filter(link => link.id !== currentNoteId);
+      await AsyncStorage.setItem('links', JSON.stringify(links));
+      setNotes(links.filter(link => link.category === category));
+      fetchNotes();
+    } catch (error) {
+      console.error('링크 삭제 오류: ', error);
+    }
+    setIsAlertVisible(false);
+  };
+
+  const showDeleteAlert = (id: string) => {
+    setCurrentNoteId(id);
+    setIsAlertVisible(true);
   };
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL copied', 'URL has been copied to clipboard.');
+    Alert.alert('URL 복사', 'URL이 클립보드에 복사되었습니다.');
   };
 
   const handleBack = () => {
@@ -99,6 +99,10 @@ const CategoryNotesScreen = () => {
     navigation.navigate('LinkCard', {id});
   };
 
+  const handleCancelDelete = () => {
+    setIsAlertVisible(false);
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({headerShown: false});
   }, [navigation]);
@@ -106,7 +110,7 @@ const CategoryNotesScreen = () => {
   const {top} = useSafeAreaInsets();
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={[styles.topWhite, {height: top}]} />
       <CategoryHeader
         title={category}
@@ -128,10 +132,19 @@ const CategoryNotesScreen = () => {
             onCopy={() => handleCopy(item.url)}
             onPress={() => handlePress(item.id)}
             isEditing={isEditing}
-            onRemove={() => handleRemove(item.id)}
+            onRemove={() => showDeleteAlert(item.id)}
           />
         )}
         contentContainerStyle={styles.contentContainer}
+      />
+      <CustomAlert
+        visible={isAlertVisible}
+        type="failed"
+        title="링크 삭제"
+        message="이 링크와 모든 내용을 삭제하시겠습니까?"
+        onConfirm={handleRemove}
+        onCancel={handleCancelDelete}
+        confirmText="예"
       />
     </View>
   );

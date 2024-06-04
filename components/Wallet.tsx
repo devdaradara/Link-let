@@ -28,7 +28,7 @@ const Wallet = ({ title, color, onPress, onDelete, editMode, onEdit }) => {
           </TouchableOpacity>
         </View>
       )}
-        {title === 'Add' ? (
+        {title === '추가' ? (
           <Text style={styles.addButtonText}>+</Text>
         ) : (
           <Text style={styles.title}></Text>

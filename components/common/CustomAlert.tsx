@@ -8,6 +8,7 @@ interface CustomAlertProps {
   title: string;
   message: string;
   onConfirm: () => void;
+  onCancel: () => void;
   confirmText?: string;
 }
 
@@ -17,6 +18,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
   title,
   message,
   onConfirm,
+  onCancel,
   confirmText = '확인',
 }) => {
   const getTypeStyles = (type: string) => {
@@ -54,14 +56,14 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onConfirm}
+      onRequestClose={onCancel}
     >
       <View style={styles.centeredView}>
         <View style={[styles.modalView, getTypeStyles(type)]}>
           <View style={styles.header}>
             <Icon name={getIconName(type)} size={24} style={styles.icon} />
             <Text style={styles.modalTitle}>{title}</Text>
-            <TouchableOpacity onPress={onConfirm}>
+            <TouchableOpacity onPress={onCancel}>
               <Icon name="close" size={24} style={styles.closeIcon} />
             </TouchableOpacity>
           </View>

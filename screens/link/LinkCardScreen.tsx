@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Alert, ScrollView, Text} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Alert, ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinkCardFront from '../../components/LinkCard/LinkCardFront';
 import LinkCardBack from '../../components/LinkCard/LinkCardBack';
 import LinkCardUpdateBack from '../../components/LinkCard/LinkCardUpdateBack';
 import LinkCardHeader from '../../components/header/LinkCardHeader';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CustomAlert from '../../components/common/CustomAlert';
 
 interface Link {
   id: string;
@@ -17,11 +18,13 @@ interface Link {
   createdAt: string;
 }
 
-const LinkCardScreen = ({route, navigation}) => {
-  const {id} = route.params;
+const LinkCardScreen = ({ route, navigation }) => {
+  const { id } = route.params;
   const [link, setLink] = useState<Link | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     const fetchLink = async () => {
@@ -36,12 +39,13 @@ const LinkCardScreen = ({route, navigation}) => {
   }, [id]);
 
   useEffect(() => {
-    navigation.setOptions({headerShown: false});
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   const handleCopy = (url: string) => {
     Clipboard.setString(url);
-    Alert.alert('URL copied.');
+    setAlertMessage('URL이 클립보드에 복사되었습니다.');
+    setIsAlertVisible(true);
   };
 
   const handleFlip = () => {
@@ -82,19 +86,23 @@ const LinkCardScreen = ({route, navigation}) => {
     navigation.goBack();
   };
 
+  const handleCancelAlert = () => {
+    setIsAlertVisible(false);
+  };
+
   if (!link) {
     return (
       <View style={styles.container}>
-        <Text>Loading link...</Text>
+        <Text>링크 불러오는 중...</Text>
       </View>
     );
   }
 
-  const {top} = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View>
-      <View style={[styles.topWhite, {height: top}]} />
+    <View style={styles.container}>
+      <View style={[styles.topWhite, { height: top }]} />
       <LinkCardHeader
         title={link.category}
         onBack={handleBack}
@@ -135,6 +143,15 @@ const LinkCardScreen = ({route, navigation}) => {
           />
         )}
       </ScrollView>
+      <CustomAlert
+        visible={isAlertVisible}
+        type="info"
+        title="알림"
+        message={alertMessage}
+        onConfirm={handleCancelAlert}
+        confirmText="확인"
+        onCancel={handleCancelAlert}
+      />
     </View>
   );
 };
@@ -146,7 +163,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e7e7e7',
-    justifyContent: 'center',
   },
   cardContainer: {
     paddingTop: 100,

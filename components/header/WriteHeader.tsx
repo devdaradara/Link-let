@@ -25,7 +25,7 @@ function WriteHeader({ onSave, title, setTitle }) {
       </View>
       <TextInput
         style={styles.titleInput}
-        placeholder="Title"
+        placeholder="제목을 입력하세요"
         placeholderTextColor={theme === 'dark' ? '#ccc' : '#999'}
         value={title}
         onChangeText={setTitle}

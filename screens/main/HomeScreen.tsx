@@ -9,6 +9,7 @@ import { useTheme } from '../../context/ThemeContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CustomAlert from '../../components/common/CustomAlert';
 import DropdownFilter from '../../components/DropdownFilter';
+import uuid from 'react-native-uuid';
 
 const HomeScreen: React.FC = () => {
   const [categories, setCategories] = useState<{ title: string, color: string, createdAt: string, id: string }[]>([]);
@@ -25,11 +26,11 @@ const HomeScreen: React.FC = () => {
     try {
       const storedCategories = await AsyncStorage.getItem('categories');
       if (storedCategories) {
-        const parsedCategories = JSON.parse(storedCategories).map((category: any) => ({
+        const parsedCategories = JSON.parse(storedCategories).map((category: any, index: number) => ({
           title: category.name,
           color: category.color,
           createdAt: category.createdAt,
-          id: category.id,
+          id: category.id || uuid.v4(),
         }));
         setCategories([{ title: '전체', color: '#f9c784', createdAt: new Date().toISOString(), id: 'all' }, ...parsedCategories]);
       } else {
@@ -60,17 +61,21 @@ const HomeScreen: React.FC = () => {
         const parsedCategories = JSON.parse(storedCategories);
         const updatedCategories = parsedCategories.filter((cat: any) => cat.id !== currentCategoryId);
         await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories));
-        fetchCategories();
+        fetchCategories(); // 카테고리를 다시 불러와서 상태를 업데이트합니다.
       }
     } catch (error) {
       console.error('카테고리 삭제 오류: ', error);
     }
-    setIsAlertVisible(false);
+    setIsAlertVisible(false); // 알럿을 닫습니다.
   };
 
   const showDeleteAlert = (categoryId: string) => {
     setCurrentCategoryId(categoryId);
     setIsAlertVisible(true);
+  };
+
+  const handleCancelDeleteCategory = () => {
+    setIsAlertVisible(false);
   };
 
   const sortCategories = (categories: any[], criteria: string) => {
@@ -161,6 +166,8 @@ const HomeScreen: React.FC = () => {
         title="카테고리 삭제"
         message="이 카테고리와 모든 내용을 삭제하시겠습니까?"
         onConfirm={handleDeleteCategory}
+        onCancel={handleCancelDeleteCategory}
+        confirmText="예"
       />
     </View>
   );
